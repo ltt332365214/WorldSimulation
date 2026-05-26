@@ -1,0 +1,51 @@
+[
+  {
+    "id": "furniture-bookshelf",
+    "name": "书架",
+    "category": "furniture",
+    "description": "红木书架，架上陈列经史子集或诗词杂书。贾政书房之书架满列正经典籍，宝玉怡红院之书架则杂藏西厢记等禁书，黛玉潇湘馆之书架以诗稿最多。",
+    "portable": false,
+    "effects": [
+      { "type": "skill", "target": "智识", "value": 1, "duration": 0, "condition": "附近读书" }
+    ],
+    "rarity": "common",
+    "ownerRef": null
+  },
+  {
+    "id": "furniture-bronzemirror",
+    "name": "铜镜",
+    "category": "furniture",
+    "description": "精致的铜镜，镜面光亮可鉴。置于闺阁之中，供梳妆打扮之用。宝玉怡红院中铜镜最为华美，镜框雕花镶玉。",
+    "portable": false,
+    "effects": [
+      { "type": "emotion", "target": "外向度", "value": 1, "duration": 2, "condition": "照镜" }
+    ],
+    "rarity": "common",
+    "ownerRef": "jia-baoyu"
+  },
+  {
+    "id": "furniture-teaset",
+    "name": "茶具",
+    "category": "furniture",
+    "description": "整套精美茶具，包括茶壶、茶杯、茶盘等，多为景德镇青花瓷或宜兴紫砂。荣府茶具讲究，不同场合用不同器具。",
+    "portable": false,
+    "effects": [
+      { "type": "skill", "target": "社交能力", "value": 1, "duration": 2, "condition": "待客用茶" }
+    ],
+    "rarity": "common",
+    "ownerRef": null
+  },
+  {
+    "id": "item-poetrydraft",
+    "name": "诗稿",
+    "category": "furniture",
+    "description": "手写的诗稿，墨迹或新或旧，纸上或有泪痕。黛玉的诗稿最为珍贵，葬花词、秋窗风雨夕等篇皆写于此。是人物才情与情感的实物寄托。",
+    "portable": true,
+    "effects": [
+      { "type": "skill", "target": "诗才", "value": 1, "duration": 4, "condition": "品读" },
+      { "type": "emotion", "target": "情感敏感度", "value": 2, "duration": 4, "condition": "品读" }
+    ],
+    "rarity": "rare",
+    "ownerRef": "lin-daiyu"
+  }
+]

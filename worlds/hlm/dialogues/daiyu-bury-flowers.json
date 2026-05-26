@@ -1,0 +1,72 @@
+{
+  "id": "daiyu-bury-flowers",
+  "name": "黛玉葬花对话",
+  "description": "暮春时节，黛玉感花伤己，在大观园中葬花吟词。宝玉闻之恸哭。",
+  "participants": ["lin-daiyu", "jia-baoyu"],
+  "tree": {
+    "id": "root",
+    "speaker": "narrator",
+    "text": "暮春时节，花瓣飘零满地。黛玉肩扛花锄，手携花帚，独自走在园中僻径之上。",
+    "choices": [
+      {
+        "id": "daiyu-start",
+        "speaker": "lin-daiyu",
+        "text": "花谢花飞花满天，红消香断有谁怜？游丝软系飘春榭，落絮轻沾扑绣帘……",
+        "emotion": "伤感",
+        "next": "daiyu-continue"
+      }
+    ]
+  },
+  "nodes": {
+    "daiyu-continue": {
+      "id": "daiyu-continue",
+      "speaker": "lin-daiyu",
+      "text": "闺中女儿惜春暮，愁绪满怀无释处，手把花锄出绣闺，忍踏落花来复去……柳丝榆荚自芳菲，不管桃飘与李飞；桃李明年能再发，明年闺中知有谁？",
+      "emotion": "哀伤",
+      "choices": [
+        {
+          "id": "daiyu-climax",
+          "speaker": "lin-daiyu",
+          "text": "侬今葬花人笑痴，他年葬侬知是谁？试看春残花渐落，便是红颜老死时。一朝春尽红颜老，花落人亡两不知！",
+          "emotion": "悲恸",
+          "next": "baoyu-hear"
+        }
+      ]
+    },
+    "baoyu-hear": {
+      "id": "baoyu-hear",
+      "speaker": "narrator",
+      "text": "宝玉在山坡上听见黛玉吟诗，先不过点头感叹，听到'侬今葬花人笑痴'一句，不觉大哭起来。",
+      "choices": [
+        {
+          "id": "baoyu-respond",
+          "speaker": "jia-baoyu",
+          "text": "（恸哭于山坡之上）既如此，花落人亡两不知，又有何趣？！",
+          "emotion": "悲恸共鸣",
+          "next": "daiyu-reaction"
+        }
+      ]
+    },
+    "daiyu-reaction": {
+      "id": "daiyu-reaction",
+      "speaker": "lin-daiyu",
+      "text": "（闻山坡上有人哭泣，回头看时，竟是宝玉。心中又感又怨，说道）你且不要在这里哭，叫人听见笑话。我不过是葬花取乐罢了，你却这般大惊小怪。",
+      "emotion": "感动又羞恼",
+      "choices": [
+        {
+          "id": "baoyu-reply",
+          "speaker": "jia-baoyu",
+          "text": "妹妹的诗句真是字字惊心！'花落人亡两不知'——倘若真有那么一日，我……",
+          "emotion": "深情悲恸",
+          "next": "end"
+        }
+      ]
+    },
+    "end": {
+      "id": "end",
+      "speaker": "narrator",
+      "text": "两人相对无言，各怀心事。春风吹落花瓣，飘在两人肩上。此情此景，恰如葬花词中所言——花自飘零水自流。",
+      "choices": []
+    }
+  }
+}

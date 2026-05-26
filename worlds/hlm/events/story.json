@@ -1,0 +1,85 @@
+[
+  {
+    "id": "bao-dai-first-meet",
+    "name": "宝黛初见",
+    "description": "黛玉初入荣国府，与宝玉在贾母正厅初次相见。两人一见如故，宝玉见黛玉便说'这个妹妹我曾见过的'，黛玉亦心中暗惊。宝玉闻黛玉无玉，当即摔自己之玉，引发一场风波。",
+    "type": "story",
+    "priority": 10,
+    "conditions": [
+      { "type": "location", "agent": "jia-baoyu", "location": "jia-mu-hall" },
+      { "type": "location", "agent": "lin-daiyu", "location": "jia-mu-hall" },
+      { "type": "flag", "name": "宝黛初见", "value": false }
+    ],
+    "actions": [
+      { "type": "set-flag", "name": "宝黛初见", "value": true },
+      { "type": "modify-relation", "from": "jia-baoyu", "to": "lin-daiyu", "affection": 30, "trust": 20 },
+      { "type": "modify-relation", "from": "lin-daiyu", "to": "jia-baoyu", "affection": 25, "trust": 15 },
+      { "type": "trigger-dialogue", "dialogueRef": "bao-dai-first-meet" },
+      { "type": "notify", "message": "宝玉与黛玉在贾母正厅初次相见，一见如故，宝玉竟摔玉落泪！" }
+    ],
+    "cooldown": 0,
+    "repeatable": false
+  },
+  {
+    "id": "baoyu-smash-jade",
+    "name": "宝玉摔玉",
+    "description": "宝玉得知黛玉无玉，痛哭摔玉，说'什么罕物，连人之高低不择，还说通灵不通灵呢！我也不要这劳什子了！'众人慌忙劝解，贾母亦出面安抚。",
+    "type": "story",
+    "priority": 9,
+    "conditions": [
+      { "type": "event-triggered", "eventRef": "bao-dai-first-meet" },
+      { "type": "flag", "name": "宝玉摔玉", "value": false }
+    ],
+    "actions": [
+      { "type": "set-flag", "name": "宝玉摔玉", "value": true },
+      { "type": "modify-attribute", "agent": "jia-baoyu", "attribute": "情绪稳定性", "value": -2, "duration": 4 },
+      { "type": "modify-relation", "from": "jia-mu", "to": "jia-baoyu", "affection": 5 },
+      { "type": "notify", "message": "宝玉摔玉大哭，贾母急忙安抚，黛玉心中自责不已。" }
+    ],
+    "cooldown": 0,
+    "repeatable": false
+  },
+  {
+    "id": "daiyu-bury-flowers",
+    "name": "黛玉葬花",
+    "description": "暮春时节，花落满地。黛玉感花伤己，携花锄葬花于园中僻处，吟出'花谢花飞花满天，红消香断有谁怜'之千古绝唱。宝玉闻之，亦恸哭于山坡之上。",
+    "type": "story",
+    "priority": 8,
+    "conditions": [
+      { "type": "season", "season": "春" },
+      { "type": "month", "month": 3 },
+      { "type": "location", "agent": "lin-daiyu", "location": "daguanyuan-gate" },
+      { "type": "flag", "name": "黛玉葬花", "value": false }
+    ],
+    "actions": [
+      { "type": "set-flag", "name": "黛玉葬花", "value": true },
+      { "type": "trigger-dialogue", "dialogueRef": "daiyu-bury-flowers" },
+      { "type": "modify-attribute", "agent": "lin-daiyu", "attribute": "情感敏感度", "value": 1, "duration": 8 },
+      { "type": "modify-relation", "from": "jia-baoyu", "to": "lin-daiyu", "affection": 20 },
+      { "type": "notify", "message": "黛玉葬花吟词，宝玉闻之恸哭。'侬今葬花人笑痴，他年葬侬知是谁？'" }
+    ],
+    "cooldown": 0,
+    "repeatable": false
+  },
+  {
+    "id": "poetry-club-haitang",
+    "name": "海棠诗社",
+    "description": "探春发起海棠诗社，众姐妹在大观园中结社作诗。宝钗、黛玉各展才情，黛玉咏白海棠之诗清新脱俗，宝钗之作端庄含蓄，各有千秋。",
+    "type": "story",
+    "priority": 7,
+    "conditions": [
+      { "type": "season", "season": "秋" },
+      { "type": "flag", "name": "海棠诗社", "value": false },
+      { "type": "location", "agent": "lin-daiyu", "location": "daguanyuan-gate" },
+      { "type": "location", "agent": "xue-baochai", "location": "daguanyuan-gate" }
+    ],
+    "actions": [
+      { "type": "set-flag", "name": "海棠诗社", "value": true },
+      { "type": "modify-attribute", "agent": "lin-daiyu", "attribute": "诗才", "value": 1, "duration": 8 },
+      { "type": "modify-attribute", "agent": "xue-baochai", "attribute": "诗才", "value": 1, "duration": 8 },
+      { "type": "notify", "message": "海棠诗社成立，众姐妹吟诗作赋，才情毕露。黛玉之诗清新脱俗，宝钗之作含蓄端丽。" }
+    ],
+    "cooldown": 0,
+    "repeatable": false
+  }
+]
