@@ -1,4 +1,4 @@
-import { EventData, EventTrigger, EventCondition, EventEffect } from './types.js';
+import { EventData, EventTrigger, EventCondition, EventEffect } from '../types.js';
 
 export class Event {
   private data: EventData;

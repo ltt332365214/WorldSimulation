@@ -1,4 +1,4 @@
-import { AgentState, AgentData, Action, AgentMemory, MemoryEntry, ImpressionRecord } from './types.js';
+import { AgentState, AgentData, Action, AgentMemory, MemoryEntry, ImpressionRecord } from '../types.js';
 
 export class Agent {
   private state: AgentState;

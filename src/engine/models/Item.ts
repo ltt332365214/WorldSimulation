@@ -1,4 +1,4 @@
-import { ItemData } from './types.js';
+import { ItemData } from '../types.js';
 
 export class Item {
   private data: ItemData;

@@ -1,4 +1,4 @@
-import { TimeData, CalendarConfig } from './types.js';
+import { TimeData, CalendarConfig } from '../types.js';
 
 export class Clock {
   private time: TimeData;

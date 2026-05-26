@@ -1,4 +1,4 @@
-import { RelationData, RelationEventRecord } from './types.js';
+import { RelationData, RelationEventRecord } from '../types.js';
 
 export class Relation {
   private data: RelationData;

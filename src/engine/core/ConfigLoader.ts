@@ -28,8 +28,9 @@ export class ConfigLoader {
   async loadWorld(worldId: string): Promise<LoadedWorld> {
     const worldPath = `${this.baseUrl}/${worldId}`;
 
-    // Load world config
-    const config = await this.fetchJson<WorldConfig>(`${worldPath}/world.json`);
+    // Load world config and normalize it to match engine types
+    const rawConfig = await this.fetchJson<Record<string, unknown>>(`${worldPath}/world.json`);
+    const config = this.normalizeWorldConfig(rawConfig);
 
     // Load maps
     const worldmap = await this.fetchJson<WorldMapData>(`${worldPath}/maps/worldmap.json`);
@@ -55,10 +56,11 @@ export class ConfigLoader {
       // No index file, try to load known maps
     }
 
-    // Load agent template
+    // Load agent template and normalize it
     let template: AgentTemplate | null = null;
     try {
-      template = await this.fetchJson<AgentTemplate>(`${worldPath}/agents/_template.json`);
+      const rawTemplate = await this.fetchJson<Record<string, unknown>>(`${worldPath}/agents/_template.json`);
+      template = this.normalizeAgentTemplate(rawTemplate);
     } catch {
       // No template
     }
