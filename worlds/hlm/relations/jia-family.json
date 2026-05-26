@@ -1,0 +1,98 @@
+[
+  {
+    "id": "jia-mu-baoyu",
+    "from": "jia-mu",
+    "to": "jia-baoyu",
+    "type": "family",
+    "subtype": "祖母-孙子",
+    "description": "贾母最疼宝玉，视其为心肝宝贝。宝玉亦深爱祖母，晨昏定省从不间断（虽心不在焉）。贾母对宝玉百般纵容，不愿他受任何委屈。",
+    "affection": 90,
+    "trust": 85,
+    "loyalty": 80,
+    "conflict": 5
+  },
+  {
+    "id": "jia-mu-daiyu",
+    "from": "jia-mu",
+    "to": "lin-daiyu",
+    "type": "family",
+    "subtype": "外祖母-外孙女",
+    "description": "贾母疼爱黛玉，因黛玉是其最爱的女儿贾敏所生。见黛玉伶俐可怜，倍加怜惜。常留黛玉在身边，起居饮食格外关照。",
+    "affection": 85,
+    "trust": 80,
+    "loyalty": 75,
+    "conflict": 10
+  },
+  {
+    "id": "daiyu-jia-mu",
+    "from": "lin-daiyu",
+    "to": "jia-mu",
+    "type": "family",
+    "subtype": "外孙女-外祖母",
+    "description": "黛玉对贾母既敬且爱，却也因寄居之感而隐隐不安。贾母的疼爱是黛玉在荣府最重要的依靠。",
+    "affection": 80,
+    "trust": 85,
+    "loyalty": 80,
+    "conflict": 5
+  },
+  {
+    "id": "baoyu-jia-zheng",
+    "from": "jia-baoyu",
+    "to": "jia-zheng",
+    "type": "family",
+    "subtype": "儿子-父亲",
+    "description": "宝玉畏惧父亲贾政，每每被叫到书房便惶恐不安。贾政恨宝玉不读正书、不求仕途，常动怒责打，却又在内心深处爱子深切。",
+    "affection": 30,
+    "trust": 20,
+    "loyalty": 40,
+    "conflict": 60
+  },
+  {
+    "id": "fengjie-jia-mu",
+    "from": "wang-xifeng",
+    "to": "jia-mu",
+    "type": "family",
+    "subtype": "侄孙女-祖母",
+    "description": "凤姐善于讨好贾母，说话行事总能令老太太开心。贾母也极欣赏凤姐的才干，管家的差事便交给了她。二人关系亲密，凤姐是贾母身边最得力的人。",
+    "affection": 80,
+    "trust": 70,
+    "loyalty": 65,
+    "conflict": 15
+  },
+  {
+    "id": "fengjie-baoyu",
+    "from": "wang-xifeng",
+    "to": "jia-baoyu",
+    "type": "family",
+    "subtype": "嫂子-弟弟",
+    "description": "凤姐与宝玉是堂嫂弟关系，凤姐对宝玉颇为关照，说话打趣颇为亲昵。宝玉对凤姐的精明强干既佩服又有所畏惧。",
+    "affection": 60,
+    "trust": 50,
+    "loyalty": 45,
+    "conflict": 20
+  },
+  {
+    "id": "baochai-xue-pan",
+    "from": "xue-baochai",
+    "to": "xue-pan",
+    "type": "family",
+    "subtype": "妹妹-哥哥",
+    "description": "宝钗对薛蟠多有规劝，虽恨其荒唐鲁莽，但骨肉之情深厚。薛蟠虽粗鲁，却对宝钗颇多依赖与尊重。",
+    "affection": 50,
+    "trust": 30,
+    "loyalty": 55,
+    "conflict": 40
+  },
+  {
+    "id": "xue-pan-baochai",
+    "from": "xue-pan",
+    "to": "xue-baochai",
+    "type": "family",
+    "subtype": "哥哥-妹妹",
+    "description": "薛蟠虽然粗鲁蛮横，但对宝钗尚有几分敬惧。宝钗的规劝他偶能听进去几分，但本性难移。",
+    "affection": 55,
+    "trust": 65,
+    "loyalty": 50,
+    "conflict": 35
+  }
+]

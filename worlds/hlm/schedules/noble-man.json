@@ -1,0 +1,22 @@
+{
+  "id": "noble-man",
+  "name": "贵族公子日程",
+  "description": "贵族男子的日常作息，适用于宝玉等公子。以闲游、读书（敷衍）、社交为主。宝玉多在园中与姐妹嬉戏。",
+  "entries": [
+    { "hour": 7, "action": "起身梳洗", "location": "yihong-yuan", "description": "赖床晚起，丫鬟催促后方起身梳洗。袭人伺候穿衣" },
+    { "hour": 8, "action": "晨省问安", "location": "jia-mu-hall", "description": "勉强前往贾母正厅行晨省之礼，心中惦念姐妹们" },
+    { "hour": 9, "action": "早膳", "location": "jia-mu-hall", "description": "在贾母处用早膳，与姐妹们一同坐席" },
+    { "hour": 10, "action": "闲游访友", "location": "xiaoxiang-guan", "description": "去潇湘馆探黛玉，或去蘅芜苑访宝钗，说笑闲聊" },
+    { "hour": 11, "action": "园中游玩", "location": "daguanyuan-gate", "description": "在大观园中闲游赏景，与姐妹丫鬟嬉戏打闹" },
+    { "hour": 12, "action": "午膳", "location": "yihong-yuan", "description": "回怡红院用午膳，或在贾母处一同用饭" },
+    { "hour": 13, "action": "午歇", "location": "yihong-yuan", "description": "饭后小憩，倚在榻上翻几页闲书，不觉昏昏睡去" },
+    { "hour": 14, "action": "读书（敷衍）", "location": "yihong-yuan", "description": "偶尔翻开书本敷衍一番，更多时候读西厢记等闲书" },
+    { "hour": 15, "action": "姐妹聚谈", "location": "daguanyuan-gate", "description": "与姐妹们在园中聚谈，或陪黛玉作诗，或与宝钗论学" },
+    { "hour": 16, "action": "闲游听戏", "location": "yihong-yuan", "description": "在怡红院中闲坐听曲，或与丫鬟们玩笑" },
+    { "hour": 18, "action": "昏定", "location": "jia-mu-hall", "description": "前往贾母处行昏定之礼，陪老太太说笑解闷" },
+    { "hour": 19, "action": "晚膳", "location": "jia-mu-hall", "description": "在贾母处用晚膳" },
+    { "hour": 20, "action": "夜话", "location": "xiaoxiang-guan", "description": "夜间偷偷去潇湘馆与黛玉夜话，或与姐妹们论诗" },
+    { "hour": 21, "action": "回院准备安寝", "location": "yihong-yuan", "description": "回怡红院，袭人伺候梳洗，准备安寝" },
+    { "hour": 22, "action": "安寝", "location": "yihong-yuan", "description": "伴花而眠，窗外海棠映月色，花香入梦" }
+  ]
+}

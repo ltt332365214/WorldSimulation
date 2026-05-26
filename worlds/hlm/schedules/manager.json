@@ -1,0 +1,23 @@
+{
+  "id": "manager",
+  "name": "管家理事日程",
+  "description": "荣国府管家的日常作息，适用于王熙凤。以理事、调度、应酬为主，忙碌而高效。",
+  "entries": [
+    { "hour": 6, "action": "起身梳洗", "location": "fengjie-yard", "description": "早起梳洗更衣，精力充沛，准备开始忙碌的一天" },
+    { "hour": 7, "action": "晨省问安", "location": "jia-mu-hall", "description": "前往贾母正厅行晨省之礼，顺便在贾母面前讨好卖乖" },
+    { "hour": 8, "action": "早膳", "location": "jia-mu-hall", "description": "在贾母处伺候早膳，一边吃饭一边张罗安排事务" },
+    { "hour": 9, "action": "理事调度", "location": "fengjie-yard", "description": "回凤姐院理事，接收丫鬟仆妇来回之事，调派人手，分发银钱" },
+    { "hour": 10, "action": "理事调度", "location": "fengjie-yard", "description": "继续理事，审看账册，吩咐采购，处理家务纠纷" },
+    { "hour": 11, "action": "巡查各处", "location": "rongguo-gate", "description": "巡查府中各处，检查厨房、库房、各院用度是否合理" },
+    { "hour": 12, "action": "午膳", "location": "jia-mu-hall", "description": "在贾母处用午膳，顺便伺候老太太，讨好众人" },
+    { "hour": 13, "action": "午歇", "location": "fengjie-yard", "description": "饭后小憩片刻，但心系府中事务，难得安睡" },
+    { "hour": 14, "action": "理事调度", "location": "fengjie-yard", "description": "继续理事，与来回事的管家仆妇交接，处理账目纠纷" },
+    { "hour": 15, "action": "应酬待客", "location": "jia-mu-hall", "description": "若有来客则应酬招待，或陪贾母说笑解闷" },
+    { "hour": 16, "action": "巡查大观园", "location": "daguanyuan-gate", "description": "偶尔去大观园巡查各院用度，检查丫鬟仆妇是否尽职" },
+    { "hour": 18, "action": "昏定", "location": "jia-mu-hall", "description": "前往贾母处行昏定之礼，陪老太太说笑，是凤姐表现的最佳时机" },
+    { "hour": 19, "action": "晚膳", "location": "jia-mu-hall", "description": "在贾母处用晚膳，张罗伺候众人" },
+    { "hour": 20, "action": "回院理事", "location": "fengjie-yard", "description": "回院处理未完之事，审看账册，吩咐明日安排" },
+    { "hour": 21, "action": "准备安寝", "location": "fengjie-yard", "description": "丫鬟伺候梳洗，准备安寝" },
+    { "hour": 22, "action": "安寝", "location": "fengjie-yard", "description": "夜深人静，但凤姐心中仍在盘算家务银钱之事" }
+  ]
+}
