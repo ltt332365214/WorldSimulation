@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  serverExternalPackages: ['fs', 'path'],
+
+  rewrites: async () => [
+    {
+      source: '/worlds/:path*',
+      destination: '/worlds/:path*',
+    },
+  ],
 };
 
 export default nextConfig;

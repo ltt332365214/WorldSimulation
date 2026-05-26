@@ -1,0 +1,57 @@
+{
+  "id": "hlm",
+  "displayName": "红楼梦",
+  "description": "以曹雪芹经典小说《红楼梦》为蓝本的世界模拟。玩家可在大观园与荣国府之间穿行，与贾府众人互动，体验宝黛钗的爱情纠葛、家族兴衰与诗酒风流。四季轮转，节庆交替，诗词唱和，悲欢离合——一切皆在红楼之中。",
+  "tickSize": 15,
+  "timeMode": "turn-based",
+  "calendar": {
+    "type": "chinese-lunar",
+    "months": 12,
+    "monthNames": ["正月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+    "seasons": [
+      { "name": "春", "months": [1, 2, 3], "description": "万物萌生，花红柳绿，大观园中百花争艳" },
+      { "name": "夏", "months": [4, 5, 6], "description": "暑热炎炎，荷塘映日，蝉鸣柳荫" },
+      { "name": "秋", "months": [7, 8, 9], "description": "金风送爽，菊花傲霜，中秋月圆人团圆" },
+      { "name": "冬", "months": [10, 11, 12], "description": "朔风凛冽，白雪红梅，围炉夜话" }
+    ],
+    "festivals": [
+      { "name": "元宵节", "month": 1, "day": 15, "description": "正月十五闹元宵，荣府张灯结彩，猜灯谜、观花灯" },
+      { "name": "端午节", "month": 5, "day": 5, "description": "五月五日端阳节，挂艾草、饮雄黄酒、赛龙舟" },
+      { "name": "中秋节", "month": 8, "day": 15, "description": "八月十五月圆夜，贾母设宴赏月，众人赋诗唱和" },
+      { "name": "重阳节", "month": 9, "day": 9, "description": "九月九日重阳登高，赏菊饮酒" },
+      { "name": "除夕", "month": 12, "day": 30, "description": "岁末除夕，合家团圆，守岁迎新" }
+    ]
+  },
+  "timeUnits": {
+    "type": "chinese-hours",
+    "names": ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"],
+    "mapping": [
+      { "name": "子时", "start": 0, "end": 2, "description": "夜半，万籁俱寂" },
+      { "name": "丑时", "start": 2, "end": 4, "description": "鸡鸣，更深露重" },
+      { "name": "寅时", "start": 4, "end": 6, "description": "平旦，黎明将至" },
+      { "name": "卯时", "start": 6, "end": 8, "description": "日出，朝霞初现" },
+      { "name": "辰时", "start": 8, "end": 10, "description": "食时，晨光正好" },
+      { "name": "巳时", "start": 10, "end": 12, "description": "隅中，日渐高升" },
+      { "name": "午时", "start": 12, "end": 14, "description": "日中，正午时分" },
+      { "name": "未时", "start": 14, "end": 16, "description": "日昳，午后慵懒" },
+      { "name": "申时", "start": 16, "end": 18, "description": "哺时，夕阳西斜" },
+      { "name": "酉时", "start": 18, "end": 20, "description": "日入，暮色苍茫" },
+      { "name": "戌时", "start": 20, "end": 22, "description": "黄昏，灯火初上" },
+      { "name": "亥时", "start": 22, "end": 24, "description": "人定，夜深人静" }
+    ]
+  },
+  "initialTime": {
+    "year": 1,
+    "month": 3,
+    "day": 1,
+    "hour": 6
+  },
+  "systems": ["schedule", "daynight", "event", "interaction"],
+  "mapRef": "worldmap",
+  "agentsRef": "agents/_index",
+  "itemsRef": "items/_index",
+  "eventsRef": "events/_index",
+  "dialoguesRef": "dialogues/_index",
+  "relationsRef": "relations/_index",
+  "schedulesRef": "schedules/_index"
+}
