@@ -1,10 +1,10 @@
-import { WorldConfig, AgentData, AgentTemplate, WorldMapData, LocationData, ItemData, RelationData, EventData, DialogueData, ScheduleData, SystemConfig, CalendarConfig, TimeData } from '../types.js';
-import { Clock } from '../models/Clock.js';
-import { Agent } from '../models/Agent.js';
-import { Item } from '../models/Item.js';
-import { Relation } from '../models/Relation.js';
-import { Event } from '../models/Event.js';
-import { Dialogue } from '../models/Dialogue.js';
+import { WorldConfig, AgentData, AgentTemplate, WorldMapData, LocationData, ItemData, RelationData, EventData, DialogueData, ScheduleData, SystemConfig, CalendarConfig, TimeData } from '../types';
+import { Clock } from '../models/Clock';
+import { Agent } from '../models/Agent';
+import { Item } from '../models/Item';
+import { Relation } from '../models/Relation';
+import { Event } from '../models/Event';
+import { Dialogue } from '../models/Dialogue';
 
 export interface LoadedWorld {
   config: WorldConfig;

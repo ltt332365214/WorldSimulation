@@ -1,0 +1,130 @@
+{
+  "id": "bao-dai-first-meet",
+  "name": "宝黛初见对话",
+  "description": "林黛玉初入荣国府，与贾宝玉在贾母正厅初次相见的对话。两人一见如故，宝玉说出'这个妹妹我曾见过的'，后又因黛玉无玉而摔玉。",
+  "participants": ["jia-baoyu", "lin-daiyu", "jia-mu"],
+  "tree": {
+    "id": "root",
+    "speaker": "jia-mu",
+    "text": "宝玉，你来见见你林家妹妹。她从扬州远道而来，以后就在咱们家住下了。",
+    "choices": [
+      {
+        "id": "baoyu-respond-1",
+        "speaker": "jia-baoyu",
+        "text": "这个妹妹我曾见过的！",
+        "emotion": "惊喜",
+        "next": "jia-mu-surprise"
+      },
+      {
+        "id": "baoyu-respond-2",
+        "speaker": "jia-baoyu",
+        "text": "好妹妹，你且过来，让我细细看看。",
+        "emotion": "好奇",
+        "next": "baoyu-look"
+      }
+    ]
+  },
+  "nodes": {
+    "jia-mu-surprise": {
+      "id": "jia-mu-surprise",
+      "speaker": "jia-mu",
+      "text": "又胡说了！你何曾见过她？",
+      "choices": [
+        {
+          "id": "baoyu-explain",
+          "speaker": "jia-baoyu",
+          "text": "虽然未曾见过她，然我看着面善，心里就算是旧相识，今日只作远别重逢亦未不可。",
+          "emotion": "感慨",
+          "next": "daiyu-inner"
+        }
+      ]
+    },
+    "baoyu-look": {
+      "id": "baoyu-look",
+      "speaker": "jia-baoyu",
+      "text": "两弯似蹙非蹙罥烟眉，一双似喜非喜含情目。态生两鬓之愁，娇袭一身之病。泪光点点，娇喘微微。闲静时如姣花照水，行动处似弱柳扶风。心较比干多一窍，病如西子胜三分。",
+      "emotion": "惊艳",
+      "choices": [
+        {
+          "id": "baoyu-ask-jade",
+          "speaker": "jia-baoyu",
+          "text": "妹妹可有玉？",
+          "emotion": "关切",
+          "next": "daiyu-no-jade"
+        }
+      ]
+    },
+    "daiyu-inner": {
+      "id": "daiyu-inner",
+      "speaker": "lin-daiyu",
+      "text": "（心中暗想：好奇怪，倒象在那里见过一般，何等眼熟到如此！）",
+      "emotion": "暗惊",
+      "choices": [
+        {
+          "id": "daiyu-respond-gentle",
+          "speaker": "lin-daiyu",
+          "text": "宝玉哥哥说得倒是有趣。",
+          "emotion": "含蓄",
+          "next": "baoyu-ask-jade-alt"
+        }
+      ]
+    },
+    "daiyu-no-jade": {
+      "id": "daiyu-no-jade",
+      "speaker": "lin-daiyu",
+      "text": "我没有玉。那玉是一件罕物，岂能人人皆有？",
+      "emotion": "坦然",
+      "choices": [
+        {
+          "id": "baoyu-smash",
+          "speaker": "jia-baoyu",
+          "text": "什么罕物，连人之高低不择，还说通灵不通灵呢！我也不要这劳什子了！",
+          "emotion": "激愤",
+          "next": "smash-action"
+        }
+      ]
+    },
+    "baoyu-ask-jade-alt": {
+      "id": "baoyu-ask-jade-alt",
+      "speaker": "jia-baoyu",
+      "text": "妹妹可有玉？",
+      "emotion": "关切",
+      "next": "daiyu-no-jade"
+    },
+    "smash-action": {
+      "id": "smash-action",
+      "speaker": "narrator",
+      "text": "宝玉摘下那玉，狠命摔去，骂道：'什么罕物！人也未必好，还有这个劳什子！'丫鬟们慌忙上前拾起，贾母急得搂住宝玉道——",
+      "choices": [
+        {
+          "id": "jia-mu-console",
+          "speaker": "jia-mu",
+          "text": "你生气要打骂人容易，何苦摔那命根子！这玉是你出生时带的，摔了岂不疼你娘的心！",
+          "emotion": "焦急",
+          "next": "daiyu-guilt"
+        }
+      ]
+    },
+    "daiyu-guilt": {
+      "id": "daiyu-guilt",
+      "speaker": "lin-daiyu",
+      "text": "（心中自责：我来的不是，惹出他家哥儿的狂病来。若摔坏了那玉，岂不是我的过错？）",
+      "emotion": "自责伤感",
+      "choices": [
+        {
+          "id": "jia-mu-pacify",
+          "speaker": "jia-mu",
+          "text": "你妹妹原有玉来着，因她母亲去世时舍不得带去，所以这玉是她娘给的，并非人人都有。宝玉别再胡闹了。",
+          "emotion": "安抚",
+          "next": "end"
+        }
+      ]
+    },
+    "end": {
+      "id": "end",
+      "speaker": "narrator",
+      "text": "风波暂歇，宝玉渐渐安静下来，众人各自安坐。黛玉与宝玉心中各有触动，自此结下一段缠绵情缘。",
+      "choices": []
+    }
+  }
+}

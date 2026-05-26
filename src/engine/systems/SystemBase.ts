@@ -1,4 +1,4 @@
-import { WorldStateManager } from '../core/WorldState.js';
+import { WorldStateManager } from '../core/WorldState';
 
 export abstract class SystemBase {
   abstract name: string;

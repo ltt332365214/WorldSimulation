@@ -1,0 +1,79 @@
+{
+  "systems": [
+    {
+      "id": "schedule",
+      "name": "日程系统",
+      "description": "根据角色的日程表自动安排角色在每个时间段的行为与位置。角色的scheduleRef指向对应的日程文件，defaultLocation用于日程中的{defaultLocation}占位符。",
+      "enabled": true,
+      "config": {
+        "followScheduleStrictness": 0.7,
+        "allowDeviation": true,
+        "deviationProbability": 0.3,
+        "deviationTriggers": ["event-interrupt", "player-interaction", "relationship-conflict"],
+        "restoreAfterDeviation": true,
+        "maxDeviationTicks": 8
+      }
+    },
+    {
+      "id": "daynight",
+      "name": "昼夜系统",
+      "description": "根据时间推进昼夜交替，影响场景氛围、角色行为与可用行动。夜间角色倾向回房安寝，夜间外出需特殊理由。",
+      "enabled": true,
+      "config": {
+        "dayStart": 6,
+        "nightStart": 20,
+        "dawnTransition": { "start": 4, "end": 6, "description": "天色渐亮，鸟鸣声起" },
+        "duskTransition": { "start": 18, "end": 20, "description": "暮色渐浓，灯火初上" },
+        "nightActivities": ["安寝", "夜话", "偷读闲书", "独自吟诗"],
+        "dayActivities": ["晨省", "理事", "读书", "访友", "园中游玩", "宴饮"],
+        "nightMovePenalty": 2,
+        "nightVisibility": "low",
+        "nightAmbienceModifier": "寂静幽暗，月色如水"
+      }
+    },
+    {
+      "id": "event",
+      "name": "事件系统",
+      "description": "根据条件触发故事事件与日常事件。故事事件推动剧情发展，日常事件循环发生。事件可修改flag、relation、attribute，并触发对话。",
+      "enabled": true,
+      "config": {
+        "checkInterval": 1,
+        "storyEventPriority": true,
+        "dailyEventRepeatInterval": 1,
+        "flagPersistence": true,
+        "conflictResolution": "priority-based",
+        "maxConcurrentEvents": 3,
+        "eventQueue": true,
+        "queueOverflowStrategy": "drop-lowest-priority"
+      }
+    },
+    {
+      "id": "interaction",
+      "name": "交互系统",
+      "description": "管理角色之间的日常交互行为，包括闲聊、争吵、合作、赠礼等。交互受角色关系值、性格属性与当前情绪影响。",
+      "enabled": true,
+      "config": {
+        "interactionRange": 1,
+        "autoInteractionProbability": 0.2,
+        "interactionCooldown": 2,
+        "emotionDecayRate": 0.1,
+        "affectionGainPerPositiveInteraction": 2,
+        "affectionLossPerNegativeInteraction": 3,
+        "trustGainPerPositiveInteraction": 1,
+        "trustLossPerNegativeInteraction": 2,
+        "conflictThreshold": 60,
+        "harmonyThreshold": 80,
+        "personalityInfluenceWeight": 0.6,
+        "attributeInfluenceWeight": 0.4,
+        "interactionTypes": {
+          "闲聊": { "affectionDelta": 1, "trustDelta": 0, "condition": "同在一处" },
+          "争吵": { "affectionDelta": -3, "trustDelta": -1, "condition": "冲突>阈值" },
+          "赠礼": { "affectionDelta": 3, "trustDelta": 1, "condition": "有物品可赠" },
+          "合作": { "affectionDelta": 2, "trustDelta": 2, "condition": "共同目标" },
+          "安慰": { "affectionDelta": 4, "trustDelta": 2, "condition": "对方情绪低" },
+          "嘲讽": { "affectionDelta": -2, "trustDelta": -1, "condition": "心机高且关系差" }
+        }
+      }
+    }
+  ]
+}

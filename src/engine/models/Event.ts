@@ -1,4 +1,4 @@
-import { EventData, EventTrigger, EventCondition, EventEffect } from '../types.js';
+import { EventData, EventTrigger, EventCondition, EventEffect } from '../types';
 
 export class Event {
   private data: EventData;
@@ -35,7 +35,7 @@ export class Event {
     }
   }
 
-  checkConditions(worldState: import('./types.js').WorldState): boolean {
+  checkConditions(worldState: import('../types').WorldState): boolean {
     const { logic = 'AND' } = this.trigger;
 
     const results = this.trigger.conditions.map(cond => this.evaluateCondition(cond, worldState));
@@ -46,7 +46,7 @@ export class Event {
     return results.some(r => r);
   }
 
-  private evaluateCondition(condition: EventCondition, worldState: import('./types.js').WorldState): boolean {
+  private evaluateCondition(condition: EventCondition, worldState: import('../types').WorldState): boolean {
     const { type, params } = condition;
 
     switch (type) {
@@ -108,4 +108,4 @@ export class Event {
   }
 }
 
-type RelationData = import('./types.js').RelationData;
+type RelationData = import('../types').RelationData;

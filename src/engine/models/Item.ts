@@ -1,4 +1,4 @@
-import { ItemData } from '../types.js';
+import { ItemData } from '../types';
 
 export class Item {
   private data: ItemData;
@@ -37,6 +37,6 @@ export class Item {
   }
 
   static deserialize(serialized: { data: ItemData; location: string | null; owner: string | null }): Item {
-    return new Item(serialized.data, serialized.location, serialized.owner);
+    return new Item(serialized.data, serialized.location ?? undefined, serialized.owner ?? undefined);
   }
 }

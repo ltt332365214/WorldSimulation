@@ -10,21 +10,21 @@ import {
   ScheduleData,
   SaveData,
   EventData,
-} from './types.js';
-import { WorldStateManager } from './core/WorldState.js';
-import { ConfigLoader } from './core/ConfigLoader.js';
-import { TickEngine } from './core/TickEngine.js';
-import { EventBus } from './core/EventBus.js';
-import { ScheduleSystem } from './systems/ScheduleSystem.js';
-import { DayNightSystem } from './systems/DayNightSystem.js';
-import { EventSystem } from './systems/EventSystem.js';
-import { InteractionSystem } from './systems/InteractionSystem.js';
-import { Clock } from './models/Clock.js';
-import { Agent } from './models/Agent.js';
-import { Item } from './models/Item.js';
-import { Relation } from './models/Relation.js';
-import { Event } from './models/Event.js';
-import { Dialogue } from './models/Dialogue.js';
+} from './types';
+import { WorldStateManager } from './core/WorldState';
+import { ConfigLoader } from './core/ConfigLoader';
+import { TickEngine } from './core/TickEngine';
+import { EventBus } from './core/EventBus';
+import { ScheduleSystem } from './systems/ScheduleSystem';
+import { DayNightSystem } from './systems/DayNightSystem';
+import { EventSystem } from './systems/EventSystem';
+import { InteractionSystem } from './systems/InteractionSystem';
+import { Clock } from './models/Clock';
+import { Agent } from './models/Agent';
+import { Item } from './models/Item';
+import { Relation } from './models/Relation';
+import { Event } from './models/Event';
+import { Dialogue } from './models/Dialogue';
 
 export class Engine {
   private stateManager: WorldStateManager;
@@ -38,10 +38,19 @@ export class Engine {
   constructor() {
     this.stateManager = new WorldStateManager();
     this.configLoader = new ConfigLoader();
-    this.tickEngine = new TickEngine(this.stateManager, this.eventBus = new EventBus(), {});
+    this.eventBus = new EventBus();
+    this.tickEngine = new TickEngine(this.stateManager, this.eventBus);
     this.schedules = {};
     this.config = null;
     this.initialized = false;
+
+    // Auto-start dialogues when triggered by events (EventSystem uses 'dialogue_trigger')
+    this.eventBus.on('dialogue_trigger', (_event: string, data: unknown) => {
+      const { dialogueId } = data as { dialogueId: string };
+      if (this.initialized && !this.activeDialogueId) {
+        this.startDialogue(dialogueId);
+      }
+    });
   }
 
   // Initialize: load world config, set player agent
@@ -61,11 +70,12 @@ export class Engine {
         id: playerState.id,
         name: playerState.name,
         gender: playerState.gender,
-        birthdate: { year: 0, month: 1, day: 1, hour: 0, minute: 0 }, // placeholder; real birthdate is in loaded data
+        description: playerState.description,
+        birthdate: playerState.birthdate ?? { year: 0, month: 1, day: 1, hour: 0, minute: 0 },
         attributes: playerState.attributes,
         personality: playerState.personality,
         defaultLocation: playerState.location,
-        scheduleRef: playerAgent.getScheduleRef(),
+        scheduleRef: playerAgent.getScheduleRef() ?? undefined,
       },
       true, // controlled
     );
@@ -90,14 +100,19 @@ export class Engine {
     this.config = loaded.config;
     this.schedules = loaded.schedules;
 
-    // 5. Create TickEngine with schedules
-    this.tickEngine = new TickEngine(this.stateManager, this.eventBus, this.schedules);
+    // 5. Create TickEngine
+    this.tickEngine = new TickEngine(this.stateManager, this.eventBus);
 
-    // 6. Register systems
-    this.tickEngine.registerSystem(new ScheduleSystem());
+    // 6. Register systems and load schedules
+    const scheduleSystem = new ScheduleSystem();
+    for (const schedule of Object.values(loaded.schedules)) {
+      scheduleSystem.loadSchedule(schedule);
+    }
+    this.tickEngine.registerSystem(scheduleSystem);
     this.tickEngine.registerSystem(new DayNightSystem());
-    this.tickEngine.registerSystem(new EventSystem());
-    this.tickEngine.registerSystem(new InteractionSystem());
+    this.tickEngine.registerSystem(new EventSystem(this.eventBus));
+    this.tickEngine.registerSystem(new InteractionSystem(this.eventBus));
+    this.tickEngine.initSystems();
 
     // 7. Mark initialized
     this.initialized = true;
@@ -235,7 +250,7 @@ export class Engine {
       }
     }
 
-    // Examine items
+    // Examine items, use items, and gift items
     const nearbyItems = this.stateManager.getItemsAtLocation(playerAgent.location);
     for (const item of nearbyItems) {
       actions.push({
@@ -246,6 +261,30 @@ export class Engine {
         elapsed: 0,
         interruptible: true,
       });
+      if (item.getData().interactable.includes('use')) {
+        actions.push({
+          id: `action_use_item_${item.id}`,
+          type: 'use_item',
+          target: item.id,
+          duration: 1,
+          elapsed: 0,
+          interruptible: true,
+        });
+      }
+      if (item.getData().interactable.includes('gift')) {
+        for (const agent of nearbyAgents) {
+          if (agent.id !== playerAgent.id) {
+            actions.push({
+              id: `action_gift_${agent.id}_${item.id}`,
+              type: 'gift',
+              target: agent.id,
+              duration: 1,
+              elapsed: 0,
+              interruptible: true,
+            });
+          }
+        }
+      }
     }
 
     // Always-available actions
@@ -265,8 +304,29 @@ export class Engine {
       elapsed: 0,
       interruptible: true,
     });
+    actions.push({
+      id: 'action_rest',
+      type: 'rest',
+      target: undefined,
+      duration: 1,
+      elapsed: 0,
+      interruptible: true,
+    });
 
     return actions;
+  }
+
+  getWorldId(): string {
+    if (!this.initialized) return '';
+    return this.stateManager.getSnapshot().worldId;
+  }
+
+  getWorldState(): WorldState {
+    return this.getSnapshot();
+  }
+
+  loadWorldState(state: WorldState): void {
+    this.importSave(JSON.stringify({ version: '1.0.0', worldId: state.worldId, worldState: state, savedAt: new Date().toISOString(), playerAgentId: state.playerAgentId, schedules: this.schedules }));
   }
 
   getLog(): LogEntry[] {
@@ -353,7 +413,22 @@ export class Engine {
     return this.activeDialogueId !== null;
   }
 
-  private executeDialogueEffect(effect: import('./types.js').EventEffect): void {
+  getActiveDialogueId(): string | null {
+    return this.activeDialogueId;
+  }
+
+  getActiveDialogueData(): { data: DialogueData; currentLine: DialogueLine | null; choices: import('./types').DialogueChoice[] } | null {
+    if (!this.activeDialogueId) return null;
+    const dialogue = this.stateManager.getDialogue(this.activeDialogueId);
+    if (!dialogue) return null;
+    return {
+      data: dialogue.getData(),
+      currentLine: dialogue.getCurrentLine(),
+      choices: dialogue.getChoices(),
+    };
+  }
+
+  private executeDialogueEffect(effect: import('./types').EventEffect): void {
     switch (effect.type) {
       case 'modify_attribute': {
         const agentId = effect.params.agentId as string;
@@ -464,7 +539,7 @@ export class Engine {
     // Rebuild agents
     const agents = new Map<string, Agent>();
     for (const [id, agentState] of Object.entries(raw.worldState?.agents ?? {})) {
-      agents.set(id, Agent.deserialize(agentState as import('./types.js').AgentState));
+      agents.set(id, Agent.deserialize(agentState as import('./types').AgentState));
     }
 
     // Rebuild items
@@ -478,7 +553,7 @@ export class Engine {
       if (itemEntry?.data && itemEntry?.location !== undefined) {
         items.set(id, Item.deserialize(itemEntry));
       } else {
-        items.set(id, new Item(itemData as import('./types.js').ItemData));
+        items.set(id, new Item(itemData as import('./types').ItemData));
       }
     }
 
@@ -486,7 +561,7 @@ export class Engine {
     const relations = new Map<string, Map<string, Relation>>();
     for (const [fromId, toMap] of Object.entries(raw.worldState?.relations ?? {})) {
       const inner = new Map<string, Relation>();
-      for (const [toId, relData] of Object.entries(toMap as Record<string, import('./types.js').RelationData>)) {
+      for (const [toId, relData] of Object.entries(toMap as Record<string, import('./types').RelationData>)) {
         inner.set(toId, Relation.deserialize(relData));
       }
       relations.set(fromId, inner);
@@ -508,7 +583,7 @@ export class Engine {
     }
 
     // Rebuild clock
-    const clockTime = raw.worldState?.clock as import('./types.js').TimeData;
+    const clockTime = raw.worldState?.clock as import('./types').TimeData;
     const clock = new Clock(clockTime, this.config!.calendar, this.config!.tickSize);
 
     // Reinitialize WorldStateManager
@@ -528,11 +603,16 @@ export class Engine {
     this.schedules = schedules;
 
     // Recreate TickEngine
-    this.tickEngine = new TickEngine(this.stateManager, this.eventBus, this.schedules);
-    this.tickEngine.registerSystem(new ScheduleSystem());
+    this.tickEngine = new TickEngine(this.stateManager, this.eventBus);
+    const scheduleSystem = new ScheduleSystem();
+    for (const schedule of Object.values(this.schedules)) {
+      scheduleSystem.loadSchedule(schedule);
+    }
+    this.tickEngine.registerSystem(scheduleSystem);
     this.tickEngine.registerSystem(new DayNightSystem());
-    this.tickEngine.registerSystem(new EventSystem());
-    this.tickEngine.registerSystem(new InteractionSystem());
+    this.tickEngine.registerSystem(new EventSystem(this.eventBus));
+    this.tickEngine.registerSystem(new InteractionSystem(this.eventBus));
+    this.tickEngine.initSystems();
 
     // Restore active dialogue state
     this.activeDialogueId = raw.activeDialogueId ?? null;

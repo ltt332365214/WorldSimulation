@@ -1,0 +1,136 @@
+{
+  "id": "rongguo-fu",
+  "name": "荣国府内景",
+  "description": "荣国府与大观园内部各处院落房间，是人物日常起居之所。从贾母正厅到各姐妹闺阁，处处有故事发生。",
+  "locations": [
+    {
+      "id": "yihong-yuan",
+      "name": "怡红院",
+      "description": "宝玉在大观园中的住处，院中花木繁茂，海棠芭蕉交映。室内陈设华美精致，脂粉香气隐隐，丫头众多，热闹非凡。宝玉在此读书、吟诗、与姐妹们嬉戏。",
+      "type": "indoor",
+      "connections": ["xiaoxiang-guan", "hengwu-yuan", "jia-mu-hall", "daguanyuan-gate"],
+      "travelTime": {
+        "xiaoxiang-guan": 2,
+        "hengwu-yuan": 2,
+        "jia-mu-hall": 3,
+        "daguanyuan-gate": 2
+      },
+      "items": ["book-xixiangji", "book-shijicollection", "furniture-bookshelf", "furniture-bronzemirror", "furniture-teaset", "food-pastry", "food-tea"],
+      "ambience": "花气袭人，红香满院。屋内挂着各色帘幔，案上有笔墨诗稿，窗外芭蕉叶阔海棠红。",
+      "owner": "jia-baoyu"
+    },
+    {
+      "id": "xiaoxiang-guan",
+      "name": "潇湘馆",
+      "description": "黛玉在大观园中的住处，千竿翠竹环绕，幽静雅致。室内简洁清冷，书架上诗书满列，案头常置笔墨诗稿。窗外竹影婆娑，风过时簌簌有声，恰似黛玉之清高孤傲。",
+      "type": "indoor",
+      "connections": ["yihong-yuan", "hengwu-yuan", "jia-mu-hall", "daguanyuan-gate"],
+      "travelTime": {
+        "yihong-yuan": 2,
+        "hengwu-yuan": 2,
+        "jia-mu-hall": 3,
+        "daguanyuan-gate": 2
+      },
+      "items": ["book-shijicollection", "furniture-bookshelf", "furniture-teaset", "item-poetrydraft", "food-tea"],
+      "ambience": "竹影清幽，窗纱碧绿。案上墨迹未干，壁间诗痕犹在。风过竹梢，如泣如诉，冷月照窗，凄清无限。",
+      "owner": "lin-daiyu"
+    },
+    {
+      "id": "hengwu-yuan",
+      "name": "蘅芜苑",
+      "description": "宝钗在大观园中的住处，院中无花木，只有各种异草香藤攀缘而生，幽香暗浮。室内素净简朴，雪洞一般，不着脂粉装饰。宝钗的端庄含蓄，恰与此处风致相合。",
+      "type": "indoor",
+      "connections": ["yihong-yuan", "xiaoxiang-guan", "jia-mu-hall", "daguanyuan-gate"],
+      "travelTime": {
+        "yihong-yuan": 2,
+        "xiaoxiang-guan": 2,
+        "jia-mu-hall": 3,
+        "daguanyuan-gate": 2
+      },
+      "items": ["book-shijicollection", "furniture-bookshelf", "furniture-teaset", "food-tea", "food-pastry"],
+      "ambience": "异草香藤满壁，幽香暗浮不散。室内如雪洞般素净，案上笔墨整齐，屏风后药香隐隐。",
+      "owner": "xue-baochai"
+    },
+    {
+      "id": "jia-mu-hall",
+      "name": "贾母正厅",
+      "description": "荣国府中贾母起居之所，也是府中众人晨昏定省、宴饮聚乐的中心。厅堂宽敞明亮，陈设富丽堂皇，红木桌椅、雕花屏风、各色帷幔。贾母在此接受儿孙敬拜，设宴请客，说笑听戏。",
+      "type": "indoor",
+      "connections": ["yihong-yuan", "xiaoxiang-guan", "hengwu-yuan", "fengjie-yard", "jia-zheng-study", "rongguo-gate"],
+      "travelTime": {
+        "yihong-yuan": 3,
+        "xiaoxiang-guan": 3,
+        "hengwu-yuan": 3,
+        "fengjie-yard": 2,
+        "jia-zheng-study": 2,
+        "rongguo-gate": 3
+      },
+      "items": ["furniture-teaset", "food-pastry", "food-tea", "food-wine"],
+      "ambience": "暖香融融，笑语喧喧。红木雕花桌椅围坐众人，丫鬟端茶递水穿梭不停，墙上有名家字画，几上有珍玩摆件。",
+      "owner": "jia-mu"
+    },
+    {
+      "id": "fengjie-yard",
+      "name": "凤姐院",
+      "description": "王熙凤在荣国府中的理事之所，西花厅旁的小院。凤姐在此打理府中庶务、收发银钱、调派人手。案上账册堆积，算盘常响，来回事的丫鬟仆妇络绎不绝。",
+      "type": "indoor",
+      "connections": ["jia-mu-hall", "jia-zheng-study", "rongguo-gate"],
+      "travelTime": {
+        "jia-mu-hall": 2,
+        "jia-zheng-study": 2,
+        "rongguo-gate": 3
+      },
+      "items": ["furniture-bookshelf", "furniture-teaset", "food-tea"],
+      "ambience": "忙碌喧嚷，算盘噼啪。案上账册银票堆积，廊下仆妇丫鬟排队等候回话，凤姐声如洪钟，语如利刃。",
+      "owner": "wang-xifeng"
+    },
+    {
+      "id": "jia-zheng-study",
+      "name": "贾政书房",
+      "description": "贾政的书房，庄重肃穆，满架经史子集。贾政在此读书理事、教训宝玉。室内陈设古朴，笔墨端肃，空气中有淡淡的檀香与墨香。宝玉最怕被叫到此地。",
+      "type": "indoor",
+      "connections": ["jia-mu-hall", "fengjie-yard", "rongguo-gate"],
+      "travelTime": {
+        "jia-mu-hall": 2,
+        "fengjie-yard": 2,
+        "rongguo-gate": 3
+      },
+      "items": ["book-shijicollection", "furniture-bookshelf", "furniture-teaset", "food-tea"],
+      "ambience": "肃穆沉静，檀香袅袅。满架书卷经史，案上笔墨端正，空气中有墨香与纸香，令人不寒而栗。",
+      "owner": "jia-zheng"
+    },
+    {
+      "id": "daguanyuan-gate",
+      "name": "大观园正门",
+      "description": "大观园与荣国府相连的正门，门上匾额题'大观园'三字。门前石狮守卫，入园则见曲径通幽、翠嶂遮路，恍若别有洞天。",
+      "type": "indoor",
+      "connections": ["yihong-yuan", "xiaoxiang-guan", "hengwu-yuan", "jia-mu-hall", "rongguo-gate"],
+      "travelTime": {
+        "yihong-yuan": 2,
+        "xiaoxiang-guan": 2,
+        "hengwu-yuan": 2,
+        "jia-mu-hall": 3,
+        "rongguo-gate": 2
+      },
+      "items": [],
+      "ambience": "翠嶂遮目，曲径通幽。门前石狮威严，入园则花香扑面、柳荫夹道，恍入仙境。",
+      "owner": null
+    },
+    {
+      "id": "rongguo-gate",
+      "name": "荣国府正门",
+      "description": "荣国府对外的大门，门前有石狮、影壁，门楣上悬'荣国府'匾额。出门即至街市，是府中人与外间往来之通道。",
+      "type": "indoor",
+      "connections": ["jia-mu-hall", "fengjie-yard", "jia-zheng-study", "daguanyuan-gate"],
+      "travelTime": {
+        "jia-mu-hall": 3,
+        "fengjie-yard": 3,
+        "jia-zheng-study": 3,
+        "daguanyuan-gate": 2
+      },
+      "items": [],
+      "ambience": "门庭高大，石狮威猛。门房仆人守立两旁，出入车马轿子络绎，显示贾家门第之盛。",
+      "owner": null
+    }
+  ]
+}

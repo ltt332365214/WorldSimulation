@@ -1,8 +1,8 @@
-import { WorldStateManager } from '../core/WorldState.js';
-import { SystemBase } from './SystemBase.js';
-import { ScheduleData, ScheduleEntry, Action, LogEntry } from '../types.js';
-import { Agent } from '../models/Agent.js';
-import { createAction, describeAction } from '../models/Action.js';
+import { WorldStateManager } from '../core/WorldState';
+import { SystemBase } from './SystemBase';
+import { ScheduleData, ScheduleEntry, Action, LogEntry } from '../types';
+import { Agent } from '../models/Agent';
+import { createAction, describeAction } from '../models/Action';
 
 export class ScheduleSystem extends SystemBase {
   name = 'ScheduleSystem';

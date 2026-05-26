@@ -1,0 +1,55 @@
+[
+  {
+    "id": "food-pastry",
+    "name": "糕点",
+    "category": "food",
+    "description": "荣国府厨房精心制作的各式糕点，有桂花糕、绿豆糕、玫瑰酥、杏仁饼等。色香味俱全，是姐妹们茶话时必备之物。",
+    "portable": true,
+    "effects": [
+      { "type": "restore", "target": "体力上限", "value": 10, "duration": 0, "condition": "食用" },
+      { "type": "emotion", "target": "情绪稳定性", "value": 1, "duration": 2, "condition": "食用" }
+    ],
+    "rarity": "common",
+    "ownerRef": null
+  },
+  {
+    "id": "food-tea",
+    "name": "茶水",
+    "category": "food",
+    "description": "上等好茶，有龙井、碧螺春、普洱等品种。荣府茶道讲究，冲泡有法，品饮有礼。凤姐善以茶待客，黛玉独爱碧螺春之清淡。",
+    "portable": true,
+    "effects": [
+      { "type": "restore", "target": "体力上限", "value": 5, "duration": 0, "condition": "饮用" },
+      { "type": "skill", "target": "智识", "value": 1, "duration": 4, "condition": "饮用" }
+    ],
+    "rarity": "common",
+    "ownerRef": null
+  },
+  {
+    "id": "food-wine",
+    "name": "酒",
+    "category": "food",
+    "description": "荣府窖藏之佳酿，有绍兴黄酒、桂花酒、玫瑰露等。宴饮时必备，宝玉偶尔偷饮，薛蟠则嗜酒如命，酒后多有荒唐之举。",
+    "portable": true,
+    "effects": [
+      { "type": "restore", "target": "体力上限", "value": -10, "duration": 0, "condition": "饮用" },
+      { "type": "emotion", "target": "外向度", "value": 2, "duration": 4, "condition": "饮用" },
+      { "type": "emotion", "target": "谨慎度", "value": -3, "duration": 4, "condition": "饮用" }
+    ],
+    "rarity": "common",
+    "ownerRef": null
+  },
+  {
+    "id": "food-medicine",
+    "name": "药",
+    "category": "food",
+    "description": "黛玉常年服用的丸药与汤药，有人参养荣丸等。味道苦涩，却为黛玉续命延年之必需。宝钗亦常配冷香丸调理体质。",
+    "portable": true,
+    "effects": [
+      { "type": "restore", "target": "体质", "value": 1, "duration": 8, "condition": "服用" },
+      { "type": "restore", "target": "体力上限", "value": 5, "duration": 0, "condition": "服用" }
+    ],
+    "rarity": "rare",
+    "ownerRef": "lin-daiyu"
+  }
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "baoyu-daiyu",
+    "from": "jia-baoyu",
+    "to": "lin-daiyu",
+    "type": "love",
+    "subtype": "恋人",
+    "description": "宝玉与黛玉心心相印，是红楼中最深沉的爱情。二人一见如故，皆视对方为知己。宝玉敬黛玉之才情与真性情，黛玉感宝玉之温柔与理解。但因'金玉良缘'之说、黛玉之寄居身份、二人性格之多疑敏感，这段感情充满波折与泪痕。",
+    "affection": 85,
+    "trust": 70,
+    "loyalty": 80,
+    "conflict": 35
+  },
+  {
+    "id": "daiyu-baoyu",
+    "from": "lin-daiyu",
+    "to": "jia-baoyu",
+    "type": "love",
+    "subtype": "恋人",
+    "description": "黛玉对宝玉情深意笃，视其为唯一知己。但因身世飘零、寄居人下，常生自怜之感；又因宝钗'金玉良缘'之说，多疑多怨，时常与宝玉口角争闹。爱之深，怨之切，泪洒无数。",
+    "affection": 90,
+    "trust": 60,
+    "loyalty": 85,
+    "conflict": 40
+  },
+  {
+    "id": "baoyu-baochai",
+    "from": "jia-baoyu",
+    "to": "xue-baochai",
+    "type": "love",
+    "subtype": "复杂感情",
+    "description": "宝玉对宝钗有敬重与欣赏，但更多的是对'金玉良缘'的抵触与反感。宝钗端庄温厚，宝玉虽觉其好，却嫌其太世故。宝钗劝他走仕途之路，更令宝玉不满。",
+    "affection": 50,
+    "trust": 55,
+    "loyalty": 40,
+    "conflict": 30
+  },
+  {
+    "id": "baochai-baoyu",
+    "from": "xue-baochai",
+    "to": "jia-baoyu",
+    "type": "love",
+    "subtype": "复杂感情",
+    "description": "宝钗对宝玉亦有情意，但她的情感含蓄不露。深知'金玉良缘'是长辈所定，虽有期待却从不主动追求。常以姐姐身份规劝宝玉，希望他能读书上进。对宝玉之率真任性既欣赏又无奈。",
+    "affection": 60,
+    "trust": 65,
+    "loyalty": 50,
+    "conflict": 25
+  },
+  {
+    "id": "daiyu-baochai",
+    "from": "lin-daiyu",
+    "to": "xue-baochai",
+    "type": "rivalry",
+    "subtype": "情敌",
+    "description": "黛玉视宝钗为情敌，因'金玉良缘'之说而心生芥蒂。宝钗的端庄周到更令黛玉感到不安与嫉妒。二人虽偶有和解（如金兰契互剖金兰语一回），但深层矛盾始终存在。",
+    "affection": 30,
+    "trust": 25,
+    "loyalty": 20,
+    "conflict": 55
+  },
+  {
+    "id": "baochai-daiyu",
+    "from": "xue-baochai",
+    "to": "lin-daiyu",
+    "type": "rivalry",
+    "subtype": "情敌",
+    "description": "宝钗对黛玉有欣赏其才情的一面，也有暗中竞争的一面。宝钗处事圆融，不与黛玉正面冲突，但暗中争取贾母与王夫人的好感。偶有真心关怀黛玉之举。",
+    "affection": 40,
+    "trust": 40,
+    "loyalty": 35,
+    "conflict": 40
+  }
+]

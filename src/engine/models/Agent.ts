@@ -1,4 +1,4 @@
-import { AgentState, AgentData, Action, AgentMemory, MemoryEntry, ImpressionRecord } from '../types.js';
+import { AgentState, AgentData, Action, AgentMemory, MemoryEntry, ImpressionRecord } from '../types';
 
 export class Agent {
   private state: AgentState;
@@ -13,6 +13,8 @@ export class Agent {
       id: data.id,
       name: data.name,
       gender: data.gender,
+      description: data.description,
+      birthdate: data.birthdate,
       location: data.defaultLocation,
       attributes: { ...data.attributes },
       personality: { ...data.personality },
@@ -111,7 +113,8 @@ export class Agent {
       id: state.id,
       name: state.name,
       gender: state.gender,
-      birthdate: { year: 0, month: 1, day: 1, hour: 0, minute: 0 },
+      birthdate: state.birthdate ?? { year: 0, month: 1, day: 1, hour: 0, minute: 0 },
+      description: state.description ?? '',
       attributes: state.attributes,
       personality: state.personality,
       defaultLocation: state.location,

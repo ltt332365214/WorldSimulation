@@ -1,0 +1,23 @@
+{
+  "id": "noble-lady",
+  "name": "闺阁贵女日程",
+  "description": "大观园中闺阁女子的日常作息，适用于黛玉、宝钗等。以读书、写诗、闲聊、访友为主。",
+  "entries": [
+    { "hour": 6, "action": "起身梳洗", "location": "{defaultLocation}", "description": "天亮起身，丫鬟伺候梳洗更衣，或照铜镜整理妆容" },
+    { "hour": 7, "action": "晨省问安", "location": "jia-mu-hall", "description": "前往贾母正厅行晨省之礼，问安叩拜" },
+    { "hour": 8, "action": "早膳", "location": "jia-mu-hall", "description": "在贾母处用早膳，或回自己院中用餐" },
+    { "hour": 9, "action": "回院读书", "location": "{defaultLocation}", "description": "回自己院中读书、写诗、整理诗稿" },
+    { "hour": 10, "action": "读书写诗", "location": "{defaultLocation}", "description": "沉浸于诗词创作与阅读之中，偶有灵感闪现" },
+    { "hour": 11, "action": "访友闲谈", "location": "yihong-yuan", "description": "去姐妹院中访友闲谈，或在怡红院与宝玉说笑" },
+    { "hour": 12, "action": "午膳", "location": "jia-mu-hall", "description": "午膳时分，或回自己院中用餐" },
+    { "hour": 13, "action": "午歇", "location": "{defaultLocation}", "description": "饭后小憩，闭目养神片刻" },
+    { "hour": 14, "action": "园中散步", "location": "daguanyuan-gate", "description": "去大观园中散步赏景，或与姐妹们在园中聚谈" },
+    { "hour": 15, "action": "品茶论诗", "location": "{defaultLocation}", "description": "品茶论诗，或独自吟咏，或与姐妹共赋新篇" },
+    { "hour": 16, "action": "绣花做针线", "location": "{defaultLocation}", "description": "做些针线绣花之事，或继续读书写诗" },
+    { "hour": 18, "action": "昏定", "location": "jia-mu-hall", "description": "前往贾母处行昏定之礼，陪老太太说笑" },
+    { "hour": 19, "action": "晚膳", "location": "jia-mu-hall", "description": "在贾母处用晚膳，或回自己院中用餐" },
+    { "hour": 20, "action": "夜谈", "location": "{defaultLocation}", "description": "夜晚与姐妹或丫鬟闲聊，或独自品读诗书" },
+    { "hour": 21, "action": "准备安寝", "location": "{defaultLocation}", "description": "丫鬟伺候梳洗，准备安寝" },
+    { "hour": 22, "action": "安寝", "location": "{defaultLocation}", "description": "夜深人静，安寝休息。窗外竹影月光，伴入梦中" }
+  ]
+}

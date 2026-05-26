@@ -1,0 +1,63 @@
+{
+  "id": "worldmap",
+  "name": "红楼世界",
+  "description": "红楼梦世界的总地图，涵盖荣国府、宁国府、大观园与街市四大区域。各区域之间有门巷相通，人物往来频繁。",
+  "locations": [
+    {
+      "id": "rongguo-fu",
+      "name": "荣国府",
+      "description": "贾家荣国公之府邸，气派宏伟，院落重重。府中人口众多，上上下下数百人，是故事的核心舞台。正门向南，东西两路各有院落，中路为贾母与贾政所居。西花厅为王熙凤理事之处，后花园与大观园相通。",
+      "type": "region",
+      "connections": ["ningguo-fu", "daguanyuan", "street"],
+      "travelTime": {
+        "ningguo-fu": 2,
+        "daguanyuan": 3,
+        "street": 4
+      },
+      "items": [],
+      "ambience": "庄重威严，偶有丫鬟婆子穿梭往来，廊下挂匾题联，檐角飞翘。",
+      "owner": "jia-zheng"
+    },
+    {
+      "id": "ningguo-fu",
+      "name": "宁国府",
+      "description": "贾家宁国公之府邸，与荣国府隔墙相连。府中由贾珍当家，虽同为贾氏宗族，但管理松散，风气奢靡。秦可卿丧事曾在此隆重举办，府中多有不堪之事。",
+      "type": "region",
+      "connections": ["rongguo-fu", "street"],
+      "travelTime": {
+        "rongguo-fu": 2,
+        "street": 4
+      },
+      "items": [],
+      "ambience": "虽门楣显赫，但内里腐朽。偶尔传来宴饮之声，夜半灯火通明。",
+      "owner": "jia-zhen"
+    },
+    {
+      "id": "daguanyuan",
+      "name": "大观园",
+      "description": "为迎接元春省亲而特建的园林，方圆数里，山水亭台俱备。园中各处由姐妹们分住：怡红院、潇湘馆、蘅芜苑、稻香村、秋爽斋等各有风致。春有百花秋有月，夏有凉风冬有雪，是红楼儿女诗酒流连之所。",
+      "type": "region",
+      "connections": ["rongguo-fu"],
+      "travelTime": {
+        "rongguo-fu": 3
+      },
+      "items": [],
+      "ambience": "花影扶疏，鸟鸣啁啾，小桥流水，曲径通幽。四季景致各异，美不胜收。",
+      "owner": "jia-baoyu"
+    },
+    {
+      "id": "street",
+      "name": "街市",
+      "description": "荣宁二府之外的京城街巷，有茶楼酒肆、药铺布庄、庙宇戏台。市井喧嚣，行人如织，是府中人偶得闲暇时闲逛之处。薛蟠等人常在此惹事生非。",
+      "type": "region",
+      "connections": ["rongguo-fu", "ningguo-fu"],
+      "travelTime": {
+        "rongguo-fu": 4,
+        "ningguo-fu": 4
+      },
+      "items": [],
+      "ambience": "市井喧闹，车马往来。叫卖声、讨价声不绝于耳，偶有官家轿子穿行而过。",
+      "owner": null
+    }
+  ]
+}

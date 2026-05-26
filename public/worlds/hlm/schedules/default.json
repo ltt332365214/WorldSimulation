@@ -1,0 +1,20 @@
+{
+  "id": "default",
+  "name": "默认日程",
+  "description": "贾府中的一般日常作息，适用于贾母等长辈。以静养、待客、闲聊为主。",
+  "entries": [
+    { "hour": 6, "action": "起身梳洗", "location": "jia-mu-hall", "description": "天亮起身，丫鬟伺候梳洗更衣" },
+    { "hour": 7, "action": "晨省待客", "location": "jia-mu-hall", "description": "在正厅等候儿孙前来问安，与众人闲话家常" },
+    { "hour": 8, "action": "早膳", "location": "jia-mu-hall", "description": "在正厅用早膳，众人陪坐" },
+    { "hour": 9, "action": "闲坐品茶", "location": "jia-mu-hall", "description": "品茶消闲，或与来访亲友叙话" },
+    { "hour": 10, "action": "听戏说笑", "location": "jia-mu-hall", "description": "偶尔叫戏班子来说戏解闷，或与孙女们猜谜嬉戏" },
+    { "hour": 12, "action": "午膳", "location": "jia-mu-hall", "description": "午膳时分，厨房送来饭菜点心" },
+    { "hour": 13, "action": "午歇", "location": "jia-mu-hall", "description": "饭后小憩，闭目养神" },
+    { "hour": 14, "action": "品茶闲话", "location": "jia-mu-hall", "description": "午后品茶，与来访的亲友叙话闲聊" },
+    { "hour": 16, "action": "散步赏景", "location": "daguanyuan-gate", "description": "偶尔去大观园中散步赏花，由丫鬟搀扶前行" },
+    { "hour": 18, "action": "昏定", "location": "jia-mu-hall", "description": "儿孙前来行昏定之礼，贾母与众人说笑解闷" },
+    { "hour": 19, "action": "晚膳", "location": "jia-mu-hall", "description": "晚膳时分，或摆小宴请客" },
+    { "hour": 21, "action": "准备安寝", "location": "jia-mu-hall", "description": "丫鬟伺候梳洗准备安寝" },
+    { "hour": 22, "action": "安寝", "location": "jia-mu-hall", "description": "夜深人静，安寝休息" }
+  ]
+}

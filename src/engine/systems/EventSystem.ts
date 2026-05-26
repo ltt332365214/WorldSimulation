@@ -1,9 +1,9 @@
-import { WorldStateManager } from '../core/WorldState.js';
-import { SystemBase } from './SystemBase.js';
-import { EventBus } from '../core/EventBus.js';
-import { LogEntry, EventEffect, WorldState } from '../types.js';
-import { Agent } from '../models/Agent.js';
-import { Event } from '../models/Event.js';
+import { WorldStateManager } from '../core/WorldState';
+import { SystemBase } from './SystemBase';
+import { EventBus } from '../core/EventBus';
+import { LogEntry, EventEffect, WorldState } from '../types';
+import { Agent } from '../models/Agent';
+import { Event } from '../models/Event';
 
 export class EventSystem extends SystemBase {
   name = 'EventSystem';

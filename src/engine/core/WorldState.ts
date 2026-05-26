@@ -1,10 +1,10 @@
-import { WorldState as WorldStateType, AgentState, LocationData, ItemData, RelationData, TimeData } from '../types.js';
-import { Clock } from '../models/Clock.js';
-import { Agent } from '../models/Agent.js';
-import { Item } from '../models/Item.js';
-import { Relation } from '../models/Relation.js';
-import { Event } from '../models/Event.js';
-import { Dialogue } from '../models/Dialogue.js';
+import { WorldState as WorldStateType, AgentState, LocationData, ItemData, RelationData, TimeData } from '../types';
+import { Clock } from '../models/Clock';
+import { Agent } from '../models/Agent';
+import { Item } from '../models/Item';
+import { Relation } from '../models/Relation';
+import { Event } from '../models/Event';
+import { Dialogue } from '../models/Dialogue';
 
 export class WorldStateManager {
   private state: WorldStateType;
@@ -14,7 +14,7 @@ export class WorldStateManager {
   private relations: Map<string, Map<string, Relation>>; // fromId → toId → Relation
   private events: Event[];
   private dialogues: Map<string, Dialogue>;
-  private log: import('../types.js').LogEntry[];
+  private log: import('../types').LogEntry[];
 
   constructor() {
     this.agents = new Map();
@@ -98,7 +98,7 @@ export class WorldStateManager {
     this.dialogues.set(id, dialogue);
   }
 
-  addLogEntry(entry: import('../types.js').LogEntry): void {
+  addLogEntry(entry: import('../types').LogEntry): void {
     this.log.push(entry);
     // Keep log bounded
     if (this.log.length > 200) {
@@ -106,7 +106,7 @@ export class WorldStateManager {
     }
   }
 
-  getLog(): import('../types.js').LogEntry[] {
+  getLog(): import('../types').LogEntry[] {
     return [...this.log];
   }
 
@@ -191,7 +191,7 @@ export class WorldStateManager {
   }
 
   // Full serialization for save/load
-  serialize(): import('../types.js').SaveData {
+  serialize(): import('../types').SaveData {
     const agentStates: Record<string, AgentState> = {};
     for (const [id, agent] of this.agents) {
       agentStates[id] = agent.getState();
@@ -210,7 +210,7 @@ export class WorldStateManager {
       }
     }
 
-    const eventData: Record<string, { data: import('../types.js').EventData; cooldownRemaining: number }> = {};
+    const eventData: Record<string, { data: import('../types').EventData; cooldownRemaining: number }> = {};
     for (const event of this.events) {
       eventData[event.id] = event.serialize();
     }

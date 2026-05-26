@@ -1,4 +1,4 @@
-import { DialogueData, DialogueLine, DialogueChoice } from '../types.js';
+import { DialogueData, DialogueLine, DialogueChoice } from '../types';
 
 export class Dialogue {
   private data: DialogueData;

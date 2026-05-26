@@ -1,0 +1,20 @@
+{
+  "templateId": "hlm-agent",
+  "description": "红楼梦角色模板，定义角色的属性与性格维度",
+  "attributes": {
+    "体质": { "description": "身体素质与健康程度，影响体力恢复与生病概率", "min": 1, "max": 10, "default": 5 },
+    "智识": { "description": "学识与理解能力，影响读书、理事、判断的效果", "min": 1, "max": 10, "default": 5 },
+    "情感敏感度": { "description": "对他人情感的感知与自身情感的丰富程度，影响诗词创作与人际互动", "min": 1, "max": 10, "default": 5 },
+    "社交能力": { "description": "与人交往、应酬周旋的能力，影响说服、调解、获得好感的效果", "min": 1, "max": 10, "default": 5 },
+    "诗才": { "description": "诗词创作的天赋与技巧，影响诗社表现与创作质量", "min": 1, "max": 10, "default": 3 },
+    "心机": { "description": "谋略与算计的能力，影响暗中操控、权谋争斗的效果", "min": 1, "max": 10, "default": 3 },
+    "体力上限": { "description": "每日可消耗的体力总量，影响可执行行动的数量", "min": 10, "max": 100, "default": 50 }
+  },
+  "personality": {
+    "外向度": { "description": "主动与人交往的倾向，外向者更喜欢群聚，内向者偏爱独处", "min": 1, "max": 10, "default": 5 },
+    "情绪稳定性": { "description": "情绪波动的频率与幅度，稳定者不易悲伤发怒，不稳定者多愁善感", "min": 1, "max": 10, "default": 5 },
+    "勤劳度": { "description": "做事勤奋的程度，勤劳者主动完成事务，懒散者多推脱懈怠", "min": 1, "max": 10, "default": 5 },
+    "谨慎度": { "description": "言行谨慎的程度，谨慎者少犯错，鲁莽者易冲动", "min": 1, "max": 10, "default": 5 },
+    "敏感度": { "description": "对外界刺激的敏感程度，敏感者易受触动，迟钝者不易受伤", "min": 1, "max": 10, "default": 5 }
+  }
+}

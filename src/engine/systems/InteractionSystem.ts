@@ -1,11 +1,11 @@
-import { WorldStateManager } from '../core/WorldState.js';
-import { SystemBase } from './SystemBase.js';
-import { EventBus } from '../core/EventBus.js';
-import { Action, ActionType, ActionRequirement, LogEntry, DialogueData } from '../types.js';
-import { Agent } from '../models/Agent.js';
-import { Item } from '../models/Item.js';
-import { createAction, isActionComplete, describeAction } from '../models/Action.js';
-import { Dialogue } from '../models/Dialogue.js';
+import { WorldStateManager } from '../core/WorldState';
+import { SystemBase } from './SystemBase';
+import { EventBus } from '../core/EventBus';
+import { Action, ActionType, ActionRequirement, LogEntry, DialogueData } from '../types';
+import { Agent } from '../models/Agent';
+import { Item } from '../models/Item';
+import { createAction, isActionComplete, describeAction } from '../models/Action';
+import { Dialogue } from '../models/Dialogue';
 
 export class InteractionSystem extends SystemBase {
   name = 'InteractionSystem';
@@ -238,7 +238,7 @@ export class InteractionSystem extends SystemBase {
     this.eventBus.emit('action_completed', { actionId: action.id, agentId: agent.id, type: action.type });
   }
 
-  private applyItemEffect(effect: import('../types.js').ActionEffect, agent: Agent, stateManager: WorldStateManager, tick: number): void {
+  private applyItemEffect(effect: import('../types').ActionEffect, agent: Agent, stateManager: WorldStateManager, tick: number): void {
     const { type, params } = effect;
 
     switch (type) {
@@ -269,7 +269,7 @@ export class InteractionSystem extends SystemBase {
     }
   }
 
-  private applyDialogueEffect(effect: import('../types.js').EventEffect, stateManager: WorldStateManager, tick: number): void {
+  private applyDialogueEffect(effect: import('../types').EventEffect, stateManager: WorldStateManager, tick: number): void {
     const { type, params } = effect;
 
     switch (type) {

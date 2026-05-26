@@ -1,7 +1,7 @@
-import { WorldStateManager } from '../core/WorldState.js';
-import { SystemBase } from './SystemBase.js';
-import { LogEntry } from '../types.js';
-import { Agent } from '../models/Agent.js';
+import { WorldStateManager } from '../core/WorldState';
+import { SystemBase } from './SystemBase';
+import { LogEntry, ActionType } from '../types';
+import { Agent } from '../models/Agent';
 
 const AMBIENCE_MAP: Record<string, string> = {
   '深夜': '夜色深沉，万物寂然',
@@ -55,7 +55,7 @@ export class DayNightSystem extends SystemBase {
 
       if (isNight) {
         // Sleeping agents recover; awake agents lose sleep value faster at night
-        if (state.currentAction?.type === 'rest') {
+        if ((state.currentAction?.type as ActionType) === 'rest') {
           agent.setState({
             ...state,
             sleepValue: Math.min(100, state.sleepValue + 2),
@@ -68,7 +68,7 @@ export class DayNightSystem extends SystemBase {
           });
 
           // Non-player agents tend to seek rest at night if sleep is low
-          if (state.sleepValue < 30 && state.currentAction?.type !== 'rest') {
+          if (state.sleepValue < 30 && (state.currentAction?.type as ActionType) !== 'rest') {
             if (!state.currentAction || state.currentAction.interruptible) {
               const logEntry: LogEntry = {
                 tick,
@@ -82,7 +82,7 @@ export class DayNightSystem extends SystemBase {
         }
       } else {
         // Daytime: natural energy recovery if resting
-        if (state.currentAction?.type === 'rest') {
+        if ((state.currentAction?.type as ActionType) === 'rest') {
           agent.setState({
             ...state,
             sleepValue: Math.min(100, state.sleepValue + 1),

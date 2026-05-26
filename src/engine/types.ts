@@ -171,6 +171,8 @@ export interface AgentState {
   id: string;
   name: string;
   gender: string;
+  description: string;
+  birthdate: TimeData;
   location: string; // current location ID
   attributes: Record<string, number>;
   personality: Record<string, number>;

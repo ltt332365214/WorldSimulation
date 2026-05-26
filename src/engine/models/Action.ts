@@ -1,4 +1,4 @@
-import { Action, ActionType, ActionRequirement, ActionEffect } from '../types.js';
+import { Action, ActionType, ActionRequirement, ActionEffect } from '../types';
 
 let actionIdCounter = 0;
 

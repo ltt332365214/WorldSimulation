@@ -1,0 +1,53 @@
+[
+  {
+    "id": "book-xixiangji",
+    "name": "西厢记",
+    "category": "books",
+    "description": "元代王实甫所作杂剧《西厢记》，讲述张生与崔莺莺的爱情故事。宝玉与黛玉共读此书，视为知心之作，却被长辈视为禁书淫词。此书是宝黛之间心灵相通的重要纽带。",
+    "portable": true,
+    "effects": [
+      { "type": "emotion", "target": "情感敏感度", "value": 1, "duration": 4, "condition": "阅读" },
+      { "type": "skill", "target": "诗才", "value": 1, "duration": 8, "condition": "阅读" }
+    ],
+    "rarity": "rare",
+    "ownerRef": "jia-baoyu"
+  },
+  {
+    "id": "book-shijicollection",
+    "name": "红楼梦诗词集",
+    "category": "books",
+    "description": "汇集大观园众姐妹平日吟咏的诗词篇章，包括黛玉葬花词、宝钗海棠诗、湘云柳絮词等。每首诗背后都藏着一段心事与故事，是红楼儿女才情与命运的写照。",
+    "portable": true,
+    "effects": [
+      { "type": "skill", "target": "诗才", "value": 2, "duration": 8, "condition": "阅读" },
+      { "type": "emotion", "target": "情感敏感度", "value": 1, "duration": 4, "condition": "阅读" }
+    ],
+    "rarity": "common",
+    "ownerRef": null
+  },
+  {
+    "id": "book-sishu",
+    "name": "四书五经",
+    "category": "books",
+    "description": "儒家经典《四书五经》，科举仕途之必读。贾政常逼宝玉研读此书，宝玉却视之为束缚性灵的枷锁，每每读之昏昏欲睡，心不在焉。",
+    "portable": true,
+    "effects": [
+      { "type": "skill", "target": "智识", "value": 2, "duration": 8, "condition": "阅读" },
+      { "type": "emotion", "target": "情绪稳定性", "value": -2, "duration": 4, "condition": "jia-baoyu阅读" }
+    ],
+    "rarity": "common",
+    "ownerRef": "jia-zheng"
+  },
+  {
+    "id": "book-taiyijing",
+    "name": "太乙金经",
+    "category": "books",
+    "description": "道家修仙之书，讲述炼丹导引、长生不老之法。宝玉偶尔翻阅，视为逃离尘世的幻想寄托。",
+    "portable": true,
+    "effects": [
+      { "type": "emotion", "target": "情绪稳定性", "value": 1, "duration": 4, "condition": "阅读" }
+    ],
+    "rarity": "rare",
+    "ownerRef": null
+  }
+]
