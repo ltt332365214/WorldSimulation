@@ -67,27 +67,25 @@ export class ScheduleSystem extends SystemBase {
 
   private executeEntry(agent: Agent, entry: ScheduleEntry, stateManager: WorldStateManager, tick: number): void {
     const currentAction = agent.getState().currentAction;
-    const currentType = currentAction?.type;
 
-    if (currentType === entry.action && currentAction?.target === (entry.target ?? undefined)) {
-      // Agent is already performing this schedule action; just advance it
-      if (currentAction) {
-        const advanced = { ...currentAction, elapsed: currentAction.elapsed + 1 };
-        agent.setAction(advanced);
-      }
-      return;
+    // Always move the agent to the scheduled location (regardless of action type)
+    // The "location" field in schedule entries specifies where the agent should be
+    if (entry.location && agent.location !== entry.location) {
+      agent.moveTo(entry.location);
     }
 
+    // Also move if action is explicitly 'move' and target is specified
+    if (entry.action === 'move' && entry.target) {
+      agent.moveTo(entry.target);
+    }
+
+    // Set the agent's current action from the schedule
     const action = this.buildActionFromEntry(entry);
 
     // Schedule-driven actions interrupt previous actions only if the new entry differs
     if (currentAction && !currentAction.interruptible) return;
 
     agent.setAction(action);
-
-    if (entry.action === 'move' && entry.target) {
-      agent.moveTo(entry.target);
-    }
 
     const description = describeAction(action, agent.name);
     const logEntry: LogEntry = {
@@ -100,6 +98,7 @@ export class ScheduleSystem extends SystemBase {
   }
 
   private buildActionFromEntry(entry: ScheduleEntry): Action {
+    // Map both English action types and common Chinese descriptions
     const typeMap: Record<string, Action['type']> = {
       move: 'move',
       greet: 'greet',
@@ -108,9 +107,41 @@ export class ScheduleSystem extends SystemBase {
       read: 'read',
       talk: 'talk',
       wait: 'wait',
+      // Chinese schedule action descriptions -> engine types
+      '安寝': 'rest',
+      '起身梳洗': 'wait',
+      '晨省问安': 'greet',
+      '晨省待客': 'greet',
+      '早膳': 'eat',
+      '午膳': 'eat',
+      '晚膳': 'eat',
+      '午歇': 'rest',
+      '闲游访友': 'move',
+      '闲游赏景': 'move',
+      '闲游听戏': 'wait',
+      '园中游玩': 'move',
+      '散步赏景': 'move',
+      '品茶闲话': 'talk',
+      '闲坐品茶': 'wait',
+      '听戏说笑': 'talk',
+      '读书': 'read',
+      '读书（敷衍）': 'read',
+      '理事': 'wait',
+      '理事账目': 'wait',
+      '昏定': 'greet',
+      '夜话': 'talk',
+      '姐妹聚谈': 'talk',
+      '回院准备安寝': 'move',
+      '准备安寝': 'rest',
+      '宴饮': 'eat',
+      '闲游': 'move',
+      '访友': 'talk',
+      '梳洗': 'wait',
     };
 
     const actionType = typeMap[entry.action] ?? 'custom';
-    return createAction(actionType, entry.target, 1, true);
+    // For move/greet/talk actions, use the location as target if no explicit target
+    const target = entry.target ?? (actionType === 'move' ? entry.location : undefined);
+    return createAction(actionType, target, 1, true);
   }
 }

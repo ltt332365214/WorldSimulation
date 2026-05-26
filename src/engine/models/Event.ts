@@ -76,6 +76,32 @@ export class Event {
         const hour = params.hour as number;
         return worldState.clock.hour >= hour;
       }
+      case 'time_in_range': {
+        const hourRange = params.hourRange as number[];
+        const hour = worldState.clock.hour;
+        return hour >= hourRange[0] && hour < hourRange[1];
+      }
+      case 'season': {
+        // Check if the current month falls within the named season
+        const seasonName = params.season as string;
+        const month = worldState.clock.month;
+        // Map common season names to month ranges (Chinese calendar)
+        // This is a simplified mapping; the engine's CalendarConfig.seasons should be used
+        // But since we don't have access to calendar here, use basic ranges
+        const seasonRanges: Record<string, [number, number]> = {
+          '春': [1, 3],
+          '夏': [4, 6],
+          '秋': [7, 9],
+          '冬': [10, 12],
+        };
+        const range = seasonRanges[seasonName];
+        if (!range) return false;
+        return month >= range[0] && month <= range[1];
+      }
+      case 'month': {
+        const expectedMonth = params.month as number;
+        return worldState.clock.month === expectedMonth;
+      }
       case 'relation_threshold': {
         const from = params.from as string;
         const to = params.to as string;

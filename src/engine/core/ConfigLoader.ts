@@ -1,4 +1,4 @@
-import { WorldConfig, AgentData, AgentTemplate, WorldMapData, LocationData, ItemData, RelationData, EventData, DialogueData, ScheduleData, SystemConfig, CalendarConfig, TimeData } from '../types';
+import { WorldConfig, AgentData, AgentTemplate, WorldMapData, LocationData, ItemData, RelationData, EventData, DialogueData, DialogueLine, DialogueChoice, ScheduleData, SystemConfig, CalendarConfig, TimeData, EventTrigger, EventCondition, EventEffect } from '../types';
 import { Clock } from '../models/Clock';
 import { Agent } from '../models/Agent';
 import { Item } from '../models/Item';
@@ -32,11 +32,12 @@ export class ConfigLoader {
     const rawConfig = await this.fetchJson<Record<string, unknown>>(`${worldPath}/world.json`);
     const config = this.normalizeWorldConfig(rawConfig);
 
-    // Load maps
-    const worldmap = await this.fetchJson<WorldMapData>(`${worldPath}/maps/worldmap.json`);
+    // Load maps - handle both "nodes" and "locations" field names
+    const worldmapRaw = await this.fetchJson<Record<string, unknown>>(`${worldPath}/maps/worldmap.json`);
     const locations: Record<string, LocationData> = {};
-    for (const node of worldmap.nodes) {
-      locations[node.id] = node;
+    const worldmapNodes = this.extractMapNodes(worldmapRaw);
+    for (const node of worldmapNodes) {
+      locations[node.id as string] = this.normalizeLocationData(node);
     }
 
     // Load additional indoor maps
@@ -45,15 +46,16 @@ export class ConfigLoader {
       if (mapFiles) {
         for (const file of mapFiles) {
           if (file !== 'worldmap.json' && file !== '_index.json') {
-            const mapData = await this.fetchJson<WorldMapData>(`${worldPath}/maps/${file}`);
-            for (const node of mapData.nodes) {
-              locations[node.id] = node;
+            const mapRaw = await this.fetchJson<Record<string, unknown>>(`${worldPath}/maps/${file}`);
+            const indoorNodes = this.extractMapNodes(mapRaw);
+            for (const node of indoorNodes) {
+              locations[node.id as string] = this.normalizeLocationData(node);
             }
           }
         }
       }
     } catch {
-      // No index file, try to load known maps
+      // No index file, skip
     }
 
     // Load agent template and normalize it
@@ -65,30 +67,38 @@ export class ConfigLoader {
       // No template
     }
 
-    // Load agents
+    // Load agents - normalize birthdate and apply template defaults
     const agentFiles = await this.fetchJson<string[]>(`${worldPath}/agents/_index.json`);
     const agents = new Map<string, Agent>();
     for (const file of agentFiles ?? []) {
       if (!file.startsWith('_')) {
-        const agentData = await this.fetchJson<AgentData>(`${worldPath}/agents/${file}`);
-        if (template && agentData.extends) {
-          agentData.attributes = { ...template.defaults.attributes, ...agentData.attributes };
-          agentData.personality = { ...template.defaults.personality, ...agentData.personality };
-        }
+        const rawAgentData = await this.fetchJson<Record<string, unknown>>(`${worldPath}/agents/${file}`);
+        const agentData = this.normalizeAgentData(rawAgentData, template);
         agents.set(agentData.id, new Agent(agentData));
       }
     }
 
-    // Load items
+    // Build item-location mapping from location data
+    const itemLocationMap: Record<string, string> = {};
+    for (const [locId, loc] of Object.entries(locations)) {
+      if (loc.items) {
+        for (const itemId of loc.items) {
+          itemLocationMap[itemId] = locId;
+        }
+      }
+    }
+
+    // Load items - normalize from JSON format
     const items = new Map<string, Item>();
     try {
       const itemFiles = await this.fetchJson<string[]>(`${worldPath}/items/_index.json`);
       for (const file of itemFiles ?? []) {
         if (!file.startsWith('_')) {
-          const itemArray = await this.fetchJson<ItemData[]>(`${worldPath}/items/${file}`);
-          for (const itemData of itemArray) {
-            const location = locations[itemData.id]?.id ?? null;
-            items.set(itemData.id, new Item(itemData, location));
+          const rawItemArray = await this.fetchJson<Record<string, unknown>[]>(`${worldPath}/items/${file}`);
+          for (const rawItem of rawItemArray) {
+            const itemData = this.normalizeItemData(rawItem);
+            const itemLocation = itemLocationMap[itemData.id] ?? null;
+            items.set(itemData.id, new Item(itemData, itemLocation ?? undefined));
           }
         }
       }
@@ -96,13 +106,14 @@ export class ConfigLoader {
       // No items
     }
 
-    // Load relations
+    // Load relations - normalize from JSON format
     const relations = new Map<string, Map<string, Relation>>();
     try {
       const relationFiles = await this.fetchJson<string[]>(`${worldPath}/relations/_index.json`);
       for (const file of relationFiles ?? []) {
-        const relationArray = await this.fetchJson<RelationData[]>(`${worldPath}/relations/${file}`);
-        for (const rData of relationArray) {
+        const rawRelationArray = await this.fetchJson<Record<string, unknown>[]>(`${worldPath}/relations/${file}`);
+        for (const rawRel of rawRelationArray) {
+          const rData = this.normalizeRelationData(rawRel);
           if (!relations.has(rData.from)) {
             relations.set(rData.from, new Map());
           }
@@ -113,13 +124,14 @@ export class ConfigLoader {
       // No relations
     }
 
-    // Load events
+    // Load events - normalize from JSON format
     const events: Event[] = [];
     try {
       const eventFiles = await this.fetchJson<string[]>(`${worldPath}/events/_index.json`);
       for (const file of eventFiles ?? []) {
-        const eventArray = await this.fetchJson<EventData[]>(`${worldPath}/events/${file}`);
-        for (const eData of eventArray) {
+        const rawEventArray = await this.fetchJson<Record<string, unknown>[]>(`${worldPath}/events/${file}`);
+        for (const rawEvent of rawEventArray) {
+          const eData = this.normalizeEventData(rawEvent);
           events.push(new Event(eData));
         }
       }
@@ -127,24 +139,26 @@ export class ConfigLoader {
       // No events
     }
 
-    // Load dialogues
+    // Load dialogues - normalize from tree structure
     const dialogues = new Map<string, Dialogue>();
     try {
       const dialogueFiles = await this.fetchJson<string[]>(`${worldPath}/dialogues/_index.json`);
       for (const file of dialogueFiles ?? []) {
-        const dialogueData = await this.fetchJson<DialogueData>(`${worldPath}/dialogues/${file}`);
+        const rawDialogue = await this.fetchJson<Record<string, unknown>>(`${worldPath}/dialogues/${file}`);
+        const dialogueData = this.normalizeDialogueData(rawDialogue);
         dialogues.set(dialogueData.id, new Dialogue(dialogueData));
       }
     } catch {
       // No dialogues
     }
 
-    // Load schedules
+    // Load schedules - normalize entries
     const schedules: Record<string, ScheduleData> = {};
     try {
       const scheduleFiles = await this.fetchJson<string[]>(`${worldPath}/schedules/_index.json`);
       for (const file of scheduleFiles ?? []) {
-        const schedule = await this.fetchJson<ScheduleData>(`${worldPath}/schedules/${file}`);
+        const rawSchedule = await this.fetchJson<Record<string, unknown>>(`${worldPath}/schedules/${file}`);
+        const schedule = this.normalizeScheduleData(rawSchedule);
         schedules[schedule.id] = schedule;
       }
     } catch {
@@ -172,8 +186,8 @@ export class ConfigLoader {
     const worlds: WorldConfig[] = [];
     for (const entry of index) {
       try {
-        const config = await this.fetchJson<WorldConfig>(`${this.baseUrl}/${entry.id}/world.json`);
-        worlds.push(config);
+        const rawConfig = await this.fetchJson<Record<string, unknown>>(`${this.baseUrl}/${entry.id}/world.json`);
+        worlds.push(this.normalizeWorldConfig(rawConfig));
       } catch {
         // Skip broken worlds
       }
@@ -188,6 +202,10 @@ export class ConfigLoader {
     }
     return response.json() as Promise<T>;
   }
+
+  // ============================================================
+  // Normalization methods
+  // ============================================================
 
   private normalizeWorldConfig(raw: Record<string, unknown>): WorldConfig {
     const calendar = this.normalizeCalendarConfig(raw.calendar as Record<string, unknown> | undefined);
@@ -306,6 +324,433 @@ export class ConfigLoader {
         attributes: defaultAttrs,
         personality: defaultPersonality,
       },
+    };
+  }
+
+  private normalizeAgentData(raw: Record<string, unknown>, template: AgentTemplate | null): AgentData {
+    // Merge template defaults with agent-specific values
+    let attributes = (raw.attributes as Record<string, number>) ?? {};
+    let personality = (raw.personality as Record<string, number>) ?? {};
+
+    if (template && raw.extends) {
+      attributes = { ...template.defaults.attributes, ...attributes };
+      personality = { ...template.defaults.personality, ...personality };
+    }
+
+    // Normalize birthdate - default hour and minute to 0 if missing
+    const rawBirthdate = raw.birthdate as Record<string, unknown> | undefined;
+    let birthdate: TimeData;
+    if (rawBirthdate) {
+      birthdate = {
+        year: rawBirthdate.year as number ?? 0,
+        month: rawBirthdate.month as number ?? 1,
+        day: rawBirthdate.day as number ?? 1,
+        hour: rawBirthdate.hour as number ?? 0,
+        minute: rawBirthdate.minute as number ?? 0,
+      };
+    } else {
+      birthdate = { year: 0, month: 1, day: 1, hour: 0, minute: 0 };
+    }
+
+    return {
+      id: raw.id as string,
+      name: raw.name as string,
+      gender: raw.gender as string ?? '未知',
+      description: raw.description as string ?? '',
+      birthdate,
+      faction: raw.faction as string | undefined,
+      extends: raw.extends as string | undefined,
+      attributes,
+      personality,
+      scheduleRef: raw.scheduleRef as string | undefined,
+      skills: raw.skills as Record<string, number> | undefined,
+      defaultLocation: raw.defaultLocation as string,
+    };
+  }
+
+  // Extract map nodes from JSON - supports both "nodes" and "locations" field names
+  private extractMapNodes(mapRaw: Record<string, unknown>): Record<string, unknown>[] {
+    // Try "nodes" first (matches WorldMapData type), then "locations" (JSON format)
+    const nodes = mapRaw.nodes ?? mapRaw.locations;
+    if (Array.isArray(nodes)) {
+      return nodes as Record<string, unknown>[];
+    }
+    return [];
+  }
+
+  // Normalize LocationData from JSON
+  private normalizeLocationData(raw: Record<string, unknown>): LocationData {
+    // Handle owner: null -> undefined (type expects string | undefined)
+    let owner: string | undefined;
+    if (raw.owner !== undefined && raw.owner !== null) {
+      owner = raw.owner as string;
+    }
+
+    return {
+      id: raw.id as string,
+      name: raw.name as string,
+      description: raw.description as string ?? '',
+      type: raw.type as 'region' | 'indoor' | 'outdoor' ?? 'outdoor',
+      connections: (raw.connections as string[]) ?? [],
+      travelTime: raw.travelTime as Record<string, number> | undefined,
+      items: (raw.items as string[]) ?? undefined,
+      ambience: raw.ambience as string | undefined,
+      owner,
+    };
+  }
+
+  // Normalize ItemData from JSON format
+  // JSON items have: id, name, category, description, portable, effects, rarity, ownerRef
+  // Engine ItemData expects: id, name, description, type, properties, interactable, value
+  private normalizeItemData(raw: Record<string, unknown>): ItemData {
+    // Determine interactable actions from item properties
+    const portable = raw.portable as boolean ?? true;
+    const effects = raw.effects as Record<string, unknown>[] ?? [];
+    const category = raw.category as string ?? raw.type as string ?? 'misc';
+
+    const interactable: string[] = ['examine'];
+    if (portable) {
+      interactable.push('pickup');
+    }
+    // Add 'use' if effects reference eating/drinking/using
+    if (category === 'food' || effects.some(e => (e.condition as string)?.includes('食') || (e.condition as string)?.includes('饮') || (e.condition as string)?.includes('服'))) {
+      interactable.push('use');
+    }
+    // Add 'gift' for portable food or common items
+    if (portable && (category === 'food' || (raw.rarity as string) === 'common')) {
+      interactable.push('gift');
+    }
+
+    // Build properties from extra fields
+    const properties: Record<string, unknown> = {};
+    if (raw.effects) properties.effects = raw.effects;
+    if (raw.rarity) properties.rarity = raw.rarity;
+    if (raw.portable !== undefined) properties.portable = raw.portable;
+    if (raw.ownerRef) properties.ownerRef = raw.ownerRef;
+
+    return {
+      id: raw.id as string,
+      name: raw.name as string,
+      description: raw.description as string ?? '',
+      type: category,
+      properties,
+      interactable,
+      value: raw.value as number | undefined ?? (raw.rarity === 'rare' ? 50 : 10),
+    };
+  }
+
+  // Normalize RelationData from JSON format
+  // JSON relations have: id, from, to, type, subtype, description, affection, trust, loyalty, conflict
+  // Engine RelationData expects: from, to, favorability, trust, intimacy, tags
+  private normalizeRelationData(raw: Record<string, unknown>): RelationData {
+    const tags: string[] = [];
+    const rawType = raw.type as string | undefined;
+    const rawSubtype = raw.subtype as string | undefined;
+    if (rawType) tags.push(rawType);
+    if (rawSubtype) tags.push(rawSubtype);
+
+    return {
+      from: raw.from as string,
+      to: raw.to as string,
+      favorability: (raw.affection as number) ?? (raw.favorability as number) ?? 50,
+      trust: (raw.trust as number) ?? 50,
+      intimacy: (raw.loyalty as number) ?? (raw.intimacy as number) ?? (raw.conflict !== undefined ? 100 - (raw.conflict as number) : 50),
+      tags,
+    };
+  }
+
+  // Normalize EventData from JSON format
+  // JSON events have: id, name, type, priority, conditions[], actions[], cooldown, repeatable
+  // Engine EventData expects: id, name, trigger (EventTrigger), priority, repeatable, cooldown, effects (EventEffect[]), scope
+  private normalizeEventData(raw: Record<string, unknown>): EventData {
+    // Convert conditions array to EventTrigger
+    const rawConditions = (raw.conditions as Record<string, unknown>[]) ?? [];
+    const triggerConditions: EventCondition[] = rawConditions.map(c => {
+      const rawType = c.type as string;
+      const params: Record<string, unknown> = {};
+      // Map JSON condition types to engine condition types that Event.evaluateCondition handles
+      let engineType: string;
+      switch (rawType) {
+        case 'location':
+          engineType = 'agent_location';
+          params.agentId = c.agent as string;
+          params.locationId = c.location as string;
+          break;
+        case 'flag':
+          // If value is false or undefined, use flag_not_set; otherwise flag_set
+          if (c.value === false || c.value === undefined) {
+            engineType = 'flag_not_set';
+            params.flagName = c.name as string;
+          } else {
+            engineType = 'flag_set';
+            params.flagName = c.name as string;
+            params.value = c.value;
+          }
+          break;
+        case 'time':
+          engineType = 'time_reached';
+          // hourRange [6, 8] means current hour >= 6
+          const hourRange = c.hourRange as number[];
+          params.hour = hourRange?.[0] ?? 0;
+          break;
+        case 'season':
+          engineType = 'season';
+          params.season = c.season as string;
+          break;
+        case 'month':
+          engineType = 'month';
+          params.month = c.month as number;
+          break;
+        case 'event-triggered':
+          engineType = 'flag_set';
+          params.flagName = `event_fired_${c.eventRef as string}`;
+          params.value = true;
+          break;
+        default:
+          engineType = rawType;
+          Object.assign(params, c);
+          delete params.type;
+          break;
+      }
+      return { type: engineType, params };
+    });
+
+    const trigger: EventTrigger = {
+      type: 'composite',
+      conditions: triggerConditions,
+      logic: 'AND',
+    };
+
+    // Convert actions array to EventEffect[]
+    // Some actions (like move-agent) may need to expand into multiple effects
+    const rawActions = (raw.actions as Record<string, unknown>[]) ?? [];
+    const effects: EventEffect[] = [];
+    for (const a of rawActions) {
+      const type = a.type as string;
+      const params: Record<string, unknown> = {};
+      switch (type) {
+        case 'set-flag':
+          params.flagName = a.name as string;
+          params.value = a.value;
+          effects.push({ type: 'set_flag', params });
+          break;
+        case 'modify-relation':
+          params.fromId = a.from as string;
+          params.toId = a.to as string;
+          // Determine which field to modify based on available properties
+          if (a.affection !== undefined) {
+            params.field = 'favorability';
+            params.delta = a.affection as number;
+          } else if (a.trust !== undefined) {
+            params.field = 'trust';
+            params.delta = a.trust as number;
+          } else if (a.intimacy !== undefined) {
+            params.field = 'intimacy';
+            params.delta = a.intimacy as number;
+          } else if (a.loyalty !== undefined) {
+            params.field = 'intimacy'; // loyalty maps to intimacy
+            params.delta = a.loyalty as number;
+          } else {
+            params.field = 'favorability';
+            params.delta = 0;
+          }
+          effects.push({ type: 'modify_relation', params });
+          break;
+        case 'modify-attribute':
+          params.agentId = a.agent as string;
+          params.attribute = a.attribute as string;
+          params.delta = a.value as number;
+          effects.push({ type: 'modify_attribute', params });
+          break;
+        case 'trigger-dialogue':
+          params.dialogueId = a.dialogueRef as string;
+          effects.push({ type: 'dialogue', params });
+          break;
+        case 'move-agent':
+          // Expand agents array into multiple move_agent effects
+          const agentIds = a.agents as string[];
+          const targetLocation = a.target as string;
+          if (Array.isArray(agentIds) && agentIds.length > 1) {
+            for (const agentId of agentIds) {
+              effects.push({ type: 'move_agent', params: { agentId, locationId: targetLocation } });
+            }
+            break; // skip the default push below
+          }
+          params.agentId = agentIds?.[0] ?? a.agent as string;
+          params.locationId = targetLocation;
+          effects.push({ type: 'move_agent', params });
+          break;
+        case 'create-item':
+          params.itemData = a.item;
+          params.locationId = a.location as string;
+          effects.push({ type: 'create_item', params });
+          break;
+        case 'notify':
+          // Notify actions don't map to EventEffect directly;
+          // they'll be handled as log entries by the event system
+          effects.push({ type: 'set_flag', params: { flagName: `_notify_${raw.id}`, value: a.message as string } });
+          break;
+        case 'restore-agent':
+          // Expand agents array into multiple modify_attribute effects
+          const restoreAgents = a.agents as string[];
+          const restoreAttr = a.attribute as string;
+          const restoreValue = a.value as number;
+          if (Array.isArray(restoreAgents) && restoreAgents.length > 1) {
+            for (const agentId of restoreAgents) {
+              effects.push({ type: 'modify_attribute', params: { agentId, attribute: restoreAttr, delta: restoreValue } });
+            }
+          } else {
+            params.agentId = restoreAgents?.[0] ?? a.agent as string;
+            params.attribute = restoreAttr;
+            params.delta = restoreValue;
+            effects.push({ type: 'modify_attribute', params });
+          }
+          break;
+        default:
+          // Unknown action types - store as a flag so the data isn't lost
+          Object.assign(params, a);
+          delete params.type;
+          params.originalActionType = type;
+          effects.push({ type: 'set_flag', params });
+          break;
+      }
+    }
+
+    return {
+      id: raw.id as string,
+      name: raw.name as string,
+      trigger,
+      priority: (raw.priority as number) ?? 5,
+      repeatable: (raw.repeatable as boolean) ?? false,
+      cooldown: (raw.cooldown as number) ?? 0,
+      effects,
+      scope: raw.scope as 'global' | 'location' | 'agents' ?? 'global',
+    };
+  }
+
+  // Normalize DialogueData from tree structure
+  // JSON dialogues have: id, participants, tree (root node), nodes (dict of nodes)
+  // Each node: { id, speaker, text, emotion, choices: [{ id, speaker, text, emotion, next: nodeId }] }
+  // Engine DialogueData expects: id, participants, lines: DialogueLine[], emotionTag
+  // DialogueLine: { speaker, text, choices?: DialogueChoice[], emotionTag?, effects? }
+  // DialogueChoice: { text, nextLineIndex?, effects?, emotionTag? }
+  private normalizeDialogueData(raw: Record<string, unknown>): DialogueData {
+    const id = raw.id as string;
+    const participants = (raw.participants as string[]) ?? [];
+    const emotionTag = raw.emotionTag as string | undefined;
+
+    // If the dialogue already has a flat "lines" array, use it directly
+    if (Array.isArray(raw.lines)) {
+      return {
+        id,
+        participants,
+        lines: raw.lines as DialogueLine[],
+        emotionTag,
+      };
+    }
+
+    // Otherwise, convert the tree structure to a flat lines array
+    const treeRoot = raw.tree as Record<string, unknown> | undefined;
+    const nodesDict = (raw.nodes as Record<string, Record<string, unknown>>) ?? {};
+
+    if (!treeRoot) {
+      // No dialogue content
+      return {
+        id,
+        participants,
+        lines: [],
+        emotionTag,
+      };
+    }
+
+    // Flatten: each "node" becomes a DialogueLine. The "next" field in choices
+    // maps to a node ID, which we convert to a line index by pre-building an
+    // ordered list of all nodes (root first, then dict nodes in insertion order).
+
+    // Collect all nodes in order: root first, then dict nodes
+    const allNodeIds: string[] = [];
+    const nodeMap: Record<string, Record<string, unknown>> = {};
+
+    // Add root node
+    const rootId = (treeRoot.id as string) ?? 'root';
+    allNodeIds.push(rootId);
+    nodeMap[rootId] = treeRoot;
+
+    // Add all dict nodes
+    for (const [nodeId, nodeData] of Object.entries(nodesDict)) {
+      if (!allNodeIds.includes(nodeId)) {
+        allNodeIds.push(nodeId);
+        nodeMap[nodeId] = nodeData;
+      }
+    }
+
+    // Build an index mapping: nodeId -> line index
+    const nodeIndexMap: Record<string, number> = {};
+    for (let i = 0; i < allNodeIds.length; i++) {
+      nodeIndexMap[allNodeIds[i]] = i;
+    }
+
+    // Convert each node to a DialogueLine
+    const lines: DialogueLine[] = allNodeIds.map(nodeId => {
+      const node = nodeMap[nodeId];
+      const rawChoices = (node.choices as Record<string, unknown>[]) ?? [];
+
+      const choices: DialogueChoice[] = rawChoices.map(c => {
+        const nextNodeId = c.next as string | undefined;
+        // If next points to "end" or an empty-choices node, don't set nextLineIndex
+        // (the dialogue will naturally end)
+        let nextLineIndex: number | undefined;
+        if (nextNodeId && nodeIndexMap[nextNodeId] !== undefined) {
+          const targetNode = nodeMap[nextNodeId];
+          const targetChoices = (targetNode?.choices as Record<string, unknown>[]) ?? [];
+          // Only set nextLineIndex if the target node has content
+          // An "end" node with empty choices is the terminal state
+          if (targetChoices.length > 0 || targetNode?.text) {
+            nextLineIndex = nodeIndexMap[nextNodeId];
+          }
+        }
+
+        return {
+          text: c.text as string ?? '',
+          nextLineIndex,
+          emotionTag: (c.emotion as string) ?? undefined,
+        };
+      });
+
+      // Filter out choices with empty text (they're just narrative transitions)
+      const filteredChoices = choices.filter(c => c.text !== '');
+
+      return {
+        speaker: node.speaker as string ?? 'narrator',
+        text: node.text as string ?? '',
+        choices: filteredChoices.length > 0 ? filteredChoices : undefined,
+        emotionTag: (node.emotion as string) ?? undefined,
+      };
+    });
+
+    return {
+      id,
+      participants,
+      lines,
+      emotionTag,
+    };
+  }
+
+  // Normalize ScheduleData from JSON format
+  private normalizeScheduleData(raw: Record<string, unknown>): ScheduleData {
+    const rawEntries = (raw.entries as Record<string, unknown>[]) ?? [];
+
+    const entries = rawEntries.map(e => ({
+      hour: e.hour as number ?? 0,
+      minute: e.minute as number ?? 0,
+      action: e.action as string ?? 'wait',
+      target: e.target as string | undefined,
+      location: e.location as string | undefined,
+    }));
+
+    return {
+      id: raw.id as string,
+      entries,
     };
   }
 }
