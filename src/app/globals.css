@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+@theme {
+  --color-jade: #2d6a4f;
+  --color-jade-light: #52b788;
+  --color-ink: #1a1a2e;
+  --color-ink-light: #2a2a4a;
+  --color-paper: #f5e6c8;
+  --color-paper-dark: #d4a76a;
+  --color-bronze: #8b6914;
+  --color-bronze-light: #c49a2a;
+  --color-vermillion: #c41e3a;
+  --color-vermillion-light: #e8384f;
+}
+
+/* Base body styles - literary Chinese dark theme */
+body {
+  background-color: #111827;
+  color: #fef3c7;
+  font-family: "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+}
+
+/* Scene text - monospace-style for immersion */
+.scene-text {
+  font-family: "FangSong", "STFangsong", "Noto Serif SC", serif;
+  letter-spacing: 0.05em;
+  line-height: 1.8;
+}
+
+/* Scrollbar styling for dark theme */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+::-webkit-scrollbar-thumb {
+  background: #8b6914;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c49a2a;
+}
+
+/* Action button hover effect */
+.action-btn {
+  transition: all 0.2s ease;
+  border: 1px solid #8b6914;
+}
+.action-btn:hover {
+  border-color: #c49a2a;
+  background-color: #2a2a4a;
+  box-shadow: 0 0 8px rgba(139, 105, 20, 0.3);
+}
+
+/* Log entry animation */
+.log-entry {
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dialogue choice styling */
+.dialogue-choice {
+  border: 1px solid #8b6914;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.dialogue-choice:hover {
+  border-color: #c49a2a;
+  background-color: rgba(139, 105, 20, 0.15);
+}
+
+/* Need bar styling */
+.need-bar {
+  transition: width 0.5s ease;
+}

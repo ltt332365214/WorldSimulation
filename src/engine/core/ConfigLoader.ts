@@ -1,4 +1,4 @@
-import { WorldConfig, AgentData, AgentTemplate, WorldMapData, LocationData, ItemData, RelationData, EventData, DialogueData, ScheduleData, SystemConfig } from '../types.js';
+import { WorldConfig, AgentData, AgentTemplate, WorldMapData, LocationData, ItemData, RelationData, EventData, DialogueData, ScheduleData, SystemConfig, CalendarConfig, TimeData } from '../types.js';
 import { Clock } from '../models/Clock.js';
 import { Agent } from '../models/Agent.js';
 import { Item } from '../models/Item.js';
@@ -187,5 +187,125 @@ export class ConfigLoader {
       throw new Error(`Failed to fetch ${url}: ${response.status}`);
     }
     return response.json() as Promise<T>;
+  }
+
+  private normalizeWorldConfig(raw: Record<string, unknown>): WorldConfig {
+    const calendar = this.normalizeCalendarConfig(raw.calendar as Record<string, unknown> | undefined);
+    const initialTime = this.normalizeInitialTime(raw.initialTime as Record<string, unknown> | undefined);
+    return {
+      id: raw.id as string,
+      displayName: raw.displayName as string ?? '',
+      description: raw.description as string ?? '',
+      tickSize: raw.tickSize as number ?? 15,
+      calendar,
+      timeMode: (raw.timeMode as string ?? 'turn-based') as 'turn-based' | 'realtime-pause',
+      initialTime,
+      systems: raw.systems as string[] ?? [],
+    };
+  }
+
+  private normalizeCalendarConfig(raw?: Record<string, unknown>): CalendarConfig {
+    if (!raw) {
+      return {
+        months: [{ name: '一月', days: 30 }],
+        seasons: [],
+        festivals: [],
+        timeUnits: [],
+      };
+    }
+
+    // Normalize months: support both array format and { months: number, monthNames: string[] } format
+    let months: { name: string; days: number }[];
+    const rawMonths = raw.months;
+    if (Array.isArray(rawMonths)) {
+      months = rawMonths as { name: string; days: number }[];
+    } else if (typeof rawMonths === 'number' && Array.isArray(raw.monthNames)) {
+      months = (raw.monthNames as string[]).map((name: string) => ({ name, days: 30 }));
+    } else {
+      months = [{ name: '一月', days: 30 }];
+    }
+
+    // Normalize seasons: support both { startMonth, endMonth } and { months: number[] } formats
+    const seasons: { name: string; startMonth: number; endMonth: number }[] = [];
+    if (Array.isArray(raw.seasons)) {
+      for (const s of raw.seasons as Record<string, unknown>[]) {
+        if (s.startMonth !== undefined && s.endMonth !== undefined) {
+          seasons.push({ name: s.name as string, startMonth: s.startMonth as number, endMonth: s.endMonth as number });
+        } else if (Array.isArray(s.months)) {
+          const monthArr = s.months as number[];
+          seasons.push({ name: s.name as string, startMonth: monthArr[0], endMonth: monthArr[monthArr.length - 1] });
+        }
+      }
+    }
+
+    // Normalize festivals
+    const festivals: { name: string; month: number; day: number }[] = [];
+    if (Array.isArray(raw.festivals)) {
+      for (const f of raw.festivals as Record<string, unknown>[]) {
+        festivals.push({ name: f.name as string, month: f.month as number, day: f.day as number });
+      }
+    }
+
+    // Normalize timeUnits: support both string[] and { names: string[] } formats
+    let timeUnits: string[];
+    const rawTimeUnits = raw.timeUnits;
+    if (Array.isArray(rawTimeUnits)) {
+      timeUnits = rawTimeUnits as string[];
+    } else if (rawTimeUnits && typeof rawTimeUnits === 'object') {
+      const tuObj = rawTimeUnits as Record<string, unknown>;
+      timeUnits = Array.isArray(tuObj.names) ? tuObj.names as string[] : [];
+    } else {
+      timeUnits = [];
+    }
+
+    return { months, seasons, festivals, timeUnits };
+  }
+
+  private normalizeInitialTime(raw?: Record<string, unknown>): TimeData {
+    if (!raw) return { year: 1, month: 1, day: 1, hour: 6, minute: 0 };
+    return {
+      year: raw.year as number ?? 1,
+      month: raw.month as number ?? 1,
+      day: raw.day as number ?? 1,
+      hour: raw.hour as number ?? 6,
+      minute: raw.minute as number ?? 0,
+    };
+  }
+
+  private normalizeAgentTemplate(raw?: Record<string, unknown>): AgentTemplate | null {
+    if (!raw) return null;
+
+    // Transform from { "体质": { description, min, max, default } } format
+    // to { "体质": 5 } defaults format expected by engine
+    const defaultAttrs: Record<string, number> = {};
+    const rawAttrs = raw.attributes as Record<string, unknown> | undefined;
+    if (rawAttrs) {
+      for (const [key, val] of Object.entries(rawAttrs)) {
+        defaultAttrs[key] = typeof val === 'object' && val !== null
+          ? (val as Record<string, unknown>).default as number ?? 5
+          : val as number;
+      }
+    }
+
+    const defaultPersonality: Record<string, number> = {};
+    const rawPersonality = raw.personality as Record<string, unknown> | undefined;
+    if (rawPersonality) {
+      for (const [key, val] of Object.entries(rawPersonality)) {
+        defaultPersonality[key] = typeof val === 'object' && val !== null
+          ? (val as Record<string, unknown>).default as number ?? 5
+          : val as number;
+      }
+    }
+
+    return {
+      fields: {
+        attributes: Object.keys(rawAttrs ?? {}),
+        personality: Object.keys(rawPersonality ?? {}),
+      },
+      defaults: {
+        attributes: defaultAttrs,
+        personality: defaultPersonality,
+      },
+    };
   }
 }
