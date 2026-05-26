@@ -1,0 +1,100 @@
+{
+  "id": "lin-daiyu",
+  "name": "林黛玉",
+  "identity": {
+    "gender": "女",
+    "birthdate": "1750-02-12",
+    "faction": "林家",
+    "family": "荣国府外甥女",
+    "title": "林姑娘",
+    "description": "贾母外孙女，才貌双全，性格敏感多愁，与贾宝玉情意相投。体弱多病，常葬花吟诗，是\"金陵十二钗\"正册之首。"
+  },
+  "attributes": {
+    "体质": 30,
+    "智识": 92,
+    "诗才": 98,
+    "心机": 45,
+    "社交": 40,
+    "情感敏感度": 95,
+    "体力": 35
+  },
+  "initialState": {
+    "position": { "mapId": "rongguofu", "roomId": "xiaoxiangguan" },
+    "health": 60,
+    "energy": 50,
+    "mood": "忧郁",
+    "hunger": 5,
+    "sleepiness": 20
+  },
+  "aiProfile": {
+    "personality": {
+      "外向度": 0.2,
+      "情绪稳定性": 0.2,
+      "勤劳度": 0.5,
+      "谨慎度": 0.7,
+      "浪漫度": 0.95,
+      "叛逆度": 0.5
+    },
+    "decisionRules": [
+      {
+        "id": "sleep-need",
+        "condition": { "type": "compare", "field": "state.sleepiness", "operator": ">", "value": 70 },
+        "action": "sleep",
+        "priority": 100
+      },
+      {
+        "id": "health-rest",
+        "condition": { "type": "compare", "field": "state.health", "operator": "<", "value": 40 },
+        "action": "rest",
+        "priority": 95
+      },
+      {
+        "id": "write-poetry",
+        "condition": {
+          "type": "and",
+          "conditions": [
+            { "type": "compare", "field": "state.energy", "operator": ">", "value": 25 },
+            { "type": "compare", "field": "state.mood", "operator": "in", "value": ["忧郁", "悲伤", "平静"] }
+          ]
+        },
+        "action": "write_poetry",
+        "priority": 80
+      },
+      {
+        "id": "read-books",
+        "condition": { "type": "compare", "field": "state.energy", "operator": ">", "value": 30 },
+        "action": "read",
+        "priority": 60
+      },
+      {
+        "id": "tend-flowers",
+        "condition": { "type": "compare", "field": "state.energy", "operator": ">", "value": 20 },
+        "action": "tend_flowers",
+        "priority": 50
+      },
+      {
+        "id": "idle-sit",
+        "condition": { "type": "always" },
+        "action": "idle",
+        "priority": 1
+      }
+    ],
+    "schedule": [
+      { "hourStart": 7, "hourEnd": 8, "activity": "起床梳妆", "location": "xiaoxiangguan" },
+      { "hourStart": 8, "hourEnd": 11, "activity": "读书写诗", "location": "xiaoxiangguan" },
+      { "hourStart": 11, "hourEnd": 13, "activity": "用午膳", "location": "rongxitang" },
+      { "hourStart": 13, "hourEnd": 15, "activity": "午睡", "location": "xiaoxiangguan" },
+      { "hourStart": 15, "hourEnd": 17, "activity": "葬花或绣花", "location": "daguan yuan" },
+      { "hourStart": 17, "hourEnd": 19, "activity": "用晚膳", "location": "rongxitang" },
+      { "hourStart": 19, "hourEnd": 21, "activity": "与宝玉聊天", "location": "xiaoxiangguan" },
+      { "hourStart": 21, "hourEnd": 7, "activity": "就寝", "location": "xiaoxiangguan" }
+    ]
+  },
+  "inventory": ["flower-burial-shovel", "handkerchief", "poetry-collection"],
+  "skills": {
+    "诗词": 98,
+    "绣花": 75,
+    "琴艺": 80,
+    "书法": 85
+  }
+}

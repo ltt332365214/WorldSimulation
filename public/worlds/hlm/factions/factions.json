@@ -1,0 +1,48 @@
+{
+  "factions": [
+    {
+      "id": "jia",
+      "name": "贾家",
+      "description": "荣国公贾源之后，分为荣国府和宁国府两支。是四大家族之首，权势显赫。",
+      "members": ["jia-baoyu", "wang-xifeng"],
+      "relations": {
+        "shi": 80,
+        "wang": 90,
+        "xue": 70
+      }
+    },
+    {
+      "id": "shi",
+      "name": "史家",
+      "description": "保龄侯尚书令史公之后，贾母即出自史家。与贾家世代联姻。",
+      "members": ["shi-xiangyun"],
+      "relations": {
+        "jia": 80,
+        "wang": 75,
+        "xue": 60
+      }
+    },
+    {
+      "id": "wang",
+      "name": "王家",
+      "description": "都太尉统制县伯王公之后，王夫人、王熙凤、薛姨妈皆出自王家。",
+      "members": ["wang-xifeng"],
+      "relations": {
+        "jia": 90,
+        "shi": 75,
+        "xue": 85
+      }
+    },
+    {
+      "id": "xue",
+      "name": "薛家",
+      "description": "紫薇舍人薛公之后，皇商世家，家资巨富。薛宝钗、薛蟠即出自薛家。",
+      "members": ["xue-baochai"],
+      "relations": {
+        "jia": 70,
+        "shi": 60,
+        "wang": 85
+      }
+    }
+  ]
+}

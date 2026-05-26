@@ -1,0 +1,95 @@
+{
+  "id": "xue-baochai",
+  "name": "薛宝钗",
+  "identity": {
+    "gender": "女",
+    "birthdate": "1750-01-21",
+    "faction": "薛家",
+    "family": "荣国府亲戚",
+    "title": "宝姑娘",
+    "description": "薛姨妈之女，容貌丰美，举止娴雅，城府颇深。随分从时，深得贾府上下喜爱，后嫁与贾宝玉。\"金陵十二钗\"正册之首。"
+  },
+  "attributes": {
+    "体质": 75,
+    "智识": 88,
+    "诗才": 82,
+    "心机": 70,
+    "社交": 90,
+    "情感敏感度": 60,
+    "体力": 70
+  },
+  "initialState": {
+    "position": { "mapId": "rongguofu", "roomId": "hengwuyuan" },
+    "health": 85,
+    "energy": 80,
+    "mood": "平静",
+    "hunger": 10,
+    "sleepiness": 5
+  },
+  "aiProfile": {
+    "personality": {
+      "外向度": 0.6,
+      "情绪稳定性": 0.9,
+      "勤劳度": 0.8,
+      "谨慎度": 0.85,
+      "浪漫度": 0.4,
+      "叛逆度": 0.2
+    },
+    "decisionRules": [
+      {
+        "id": "sleep-need",
+        "condition": { "type": "compare", "field": "state.sleepiness", "operator": ">", "value": 75 },
+        "action": "sleep",
+        "priority": 100
+      },
+      {
+        "id": "sew-clothes",
+        "condition": { "type": "compare", "field": "state.energy", "operator": ">", "value": 40 },
+        "action": "sew",
+        "priority": 70
+      },
+      {
+        "id": "social-visit",
+        "condition": {
+          "type": "and",
+          "conditions": [
+            { "type": "compare", "field": "state.energy", "operator": ">", "value": 35 },
+            { "type": "time", "field": "hour", "operator": "inRange", "value": [9, 17] }
+          ]
+        },
+        "action": "social_visit",
+        "priority": 60
+      },
+      {
+        "id": "read-books",
+        "condition": { "type": "compare", "field": "state.energy", "operator": ">", "value": 30 },
+        "action": "read",
+        "priority": 50
+      },
+      {
+        "id": "idle-meditate",
+        "condition": { "type": "always" },
+        "action": "idle",
+        "priority": 1
+      }
+    ],
+    "schedule": [
+      { "hourStart": 6, "hourEnd": 7, "activity": "起床梳妆", "location": "hengwuyuan" },
+      { "hourStart": 7, "hourEnd": 9, "activity": "向长辈请安", "location": "rongxitang" },
+      { "hourStart": 9, "hourEnd": 11, "activity": "做针线或读书", "location": "hengwuyuan" },
+      { "hourStart": 11, "hourEnd": 13, "activity": "用午膳", "location": "rongxitang" },
+      { "hourStart": 13, "hourEnd": 15, "activity": "午睡", "location": "hengwuyuan" },
+      { "hourStart": 15, "hourEnd": 17, "activity": "串门聊天", "location": "daguan yuan" },
+      { "hourStart": 17, "hourEnd": 19, "activity": "用晚膳", "location": "rongxitang" },
+      { "hourStart": 19, "hourEnd": 21, "activity": "与众人聊天", "location": "hengwuyuan" },
+      { "hourStart": 21, "hourEnd": 6, "activity": "就寝", "location": "hengwuyuan" }
+    ]
+  },
+  "inventory": ["needlework-kit", "cold-fragrance-pills"],
+  "skills": {
+    "诗词": 82,
+    "针线": 95,
+    "绘画": 70,
+    "管家": 85
+  }
+}

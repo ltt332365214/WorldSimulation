@@ -1,0 +1,41 @@
+{
+  "id": "worldmap",
+  "name": "京城大地图",
+  "type": "world",
+  "description": "红楼梦故事发生的主要区域，以荣国府为核心。",
+  "nodes": [
+    {
+      "id": "rongguofu",
+      "name": "荣国府",
+      "type": "residence",
+      "description": "贾母的府邸，故事的主要舞台。",
+      "x": 100,
+      "y": 100,
+      "connections": ["ningguofu", "daguan-yuan-ext"],
+      "subMap": "rongguofu"
+    },
+    {
+      "id": "ningguofu",
+      "name": "宁国府",
+      "type": "residence",
+      "description": "贾珍、贾蓉的府邸。",
+      "x": 200,
+      "y": 80,
+      "connections": ["rongguofu"]
+    },
+    {
+      "id": "daguan-yuan-ext",
+      "name": "大观园外",
+      "type": "garden",
+      "description": "大观园的入口。",
+      "x": 100,
+      "y": 200,
+      "connections": ["rongguofu"],
+      "subMap": "daguan-yuan"
+    }
+  ],
+  "connections": [
+    { "from": "rongguofu", "to": "ningguofu", "distance": 10, "description": "穿过一条小巷" },
+    { "from": "rongguofu", "to": "daguan-yuan-ext", "distance": 5, "description": "从后门出去" }
+  ]
+}

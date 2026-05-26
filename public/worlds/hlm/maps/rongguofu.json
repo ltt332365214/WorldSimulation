@@ -1,0 +1,70 @@
+{
+  "id": "rongguofu",
+  "name": "荣国府",
+  "type": "indoor",
+  "description": "贾母居住的荣国府，是红楼梦的主要舞台。府内布局错综复杂，有大厅、后院、各房院落。",
+  "parentMap": "worldmap",
+  "rooms": [
+    {
+      "id": "rongxitang",
+      "name": "荣禧堂",
+      "description": "荣国府的正厅，是接待宾客、举办家宴的重要场所。堂内陈设华贵，正中悬挂着\"荣禧堂\"匾额。",
+      "owner": "贾母",
+      "connections": ["houyuan", "jia-zheng-yuan"],
+      "ambience": "庄重、热闹"
+    },
+    {
+      "id": "houyuan",
+      "name": "后院",
+      "description": "荣国府的后花园，通向各房的必经之路。园中有假山流水，花木扶疏。",
+      "connections": ["rongxitang", "yihongyuan", "xiaoxiangguan", "hengwuyuan"],
+      "ambience": "清幽、雅致"
+    },
+    {
+      "id": "yihongyuan",
+      "name": "怡红院",
+      "description": "贾宝玉的住所，院内种满海棠和芭蕉，布置精致。宝玉每日在此读书、写诗、与姐妹谈笑。",
+      "owner": "贾宝玉",
+      "connections": ["houyuan", "daguan-yuan-path"],
+      "ambience": "温暖、略显散漫"
+    },
+    {
+      "id": "xiaoxiangguan",
+      "name": "潇湘馆",
+      "description": "林黛玉的居所，院内修竹掩映，清凉幽静。黛玉常在此读书写诗，葬花抚琴。",
+      "owner": "林黛玉",
+      "connections": ["houyuan", "daguan-yuan-path"],
+      "ambience": "清冷、诗意"
+    },
+    {
+      "id": "hengwuyuan",
+      "name": "蘅芜苑",
+      "description": "薛宝钗的住所，院内种植奇花异草，清香扑鼻。宝钗在此做针线、读书。",
+      "owner": "薛宝钗",
+      "connections": ["houyuan", "daguan-yuan-path"],
+      "ambience": "素雅、清香"
+    },
+    {
+      "id": "qinfang",
+      "name": "沁芳阁",
+      "description": "史湘云在府中居住的地方，靠近水边，风景宜人。",
+      "owner": "史湘云",
+      "connections": ["houyuan"],
+      "ambience": "明快、爽朗"
+    },
+    {
+      "id": "jia-zheng-yuan",
+      "name": "贾政院",
+      "description": "贾政和王夫人的住所，是府中管理事务的中心。",
+      "owner": "贾政",
+      "connections": ["rongxitang"],
+      "ambience": "严肃、正经"
+    },
+    {
+      "id": "daguan-yuan-path",
+      "name": "通往大观园",
+      "description": "一条蜿蜒的石子路，通向大观园。",
+      "connections": ["yihongyuan", "xiaoxiangguan", "hengwuyuan"]
+    }
+  ]
+}

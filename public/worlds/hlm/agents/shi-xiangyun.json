@@ -1,0 +1,94 @@
+{
+  "id": "shi-xiangyun",
+  "name": "史湘云",
+  "identity": {
+    "gender": "女",
+    "birthdate": "1749-12-15",
+    "faction": "史家",
+    "family": "荣国府亲戚",
+    "title": "云姑娘",
+    "description": "贾母侄孙女，性格豪爽开朗，心直口快，爱说爱笑。才思敏捷，不拘小节，常与黛玉斗嘴又和好。\"金陵十二钗\"之一。"
+  },
+  "attributes": {
+    "体质": 80,
+    "智识": 78,
+    "诗才": 88,
+    "心机": 30,
+    "社交": 85,
+    "情感敏感度": 60,
+    "体力": 85
+  },
+  "initialState": {
+    "position": { "mapId": "rongguofu", "roomId": "qinfang" },
+    "health": 90,
+    "energy": 85,
+    "mood": "高兴",
+    "hunger": 15,
+    "sleepiness": 5
+  },
+  "aiProfile": {
+    "personality": {
+      "外向度": 0.95,
+      "情绪稳定性": 0.7,
+      "勤劳度": 0.6,
+      "谨慎度": 0.2,
+      "浪漫度": 0.6,
+      "叛逆度": 0.6
+    },
+    "decisionRules": [
+      {
+        "id": "sleep-need",
+        "condition": { "type": "compare", "field": "state.sleepiness", "operator": ">", "value": 75 },
+        "action": "sleep",
+        "priority": 100
+      },
+      {
+        "id": "chat-with-others",
+        "condition": {
+          "type": "and",
+          "conditions": [
+            { "type": "compare", "field": "state.energy", "operator": ">", "value": 30 },
+            { "type": "nearby", "agentId": "any" }
+          ]
+        },
+        "action": "chat",
+        "priority": 80
+      },
+      {
+        "id": "play-games",
+        "condition": { "type": "compare", "field": "state.energy", "operator": ">", "value": 40 },
+        "action": "play",
+        "priority": 70
+      },
+      {
+        "id": "write-poetry",
+        "condition": { "type": "compare", "field": "state.mood", "operator": "in", "value": ["高兴", "兴奋"] },
+        "action": "write_poetry",
+        "priority": 60
+      },
+      {
+        "id": "idle-enjoy",
+        "condition": { "type": "always" },
+        "action": "idle",
+        "priority": 1
+      }
+    ],
+    "schedule": [
+      { "hourStart": 7, "hourEnd": 8, "activity": "起床", "location": "qinfang" },
+      { "hourStart": 8, "hourEnd": 11, "activity": "找人聊天玩耍", "location": "daguan yuan" },
+      { "hourStart": 11, "hourEnd": 13, "activity": "用午膳", "location": "rongxitang" },
+      { "hourStart": 13, "hourEnd": 15, "activity": "午睡", "location": "qinfang" },
+      { "hourStart": 15, "hourEnd": 17, "activity": "作诗或游戏", "location": "daguan yuan" },
+      { "hourStart": 17, "hourEnd": 19, "activity": "用晚膳", "location": "rongxitang" },
+      { "hourStart": 19, "hourEnd": 22, "activity": "喝酒说笑", "location": "qinfang" },
+      { "hourStart": 22, "hourEnd": 7, "activity": "就寝", "location": "qinfang" }
+    ]
+  },
+  "inventory": ["jinsihou-handkerchief", "wine-cup"],
+  "skills": {
+    "诗词": 88,
+    "女红": 60,
+    "喝酒": 90,
+    "猜拳": 85
+  }
+}

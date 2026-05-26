@@ -1,0 +1,49 @@
+{
+  "id": "daguan-yuan",
+  "name": "大观园",
+  "type": "outdoor",
+  "description": "为元妃省亲所建的皇家园林，后成为宝玉和众姐妹的居所。园内亭台楼阁、山水花木，美不胜收。",
+  "parentMap": "worldmap",
+  "rooms": [
+    {
+      "id": "main-gate",
+      "name": "大观园正门",
+      "description": "大观园的正门，门楼巍峨，匾额上\"大观园\"三个大字金光闪闪。",
+      "connections": ["qujiang", "yingfeng-ting"]
+    },
+    {
+      "id": "qujiang",
+      "name": "曲径通幽",
+      "description": "一条蜿蜒曲折的石子小路，两旁翠竹夹道，通向园中各处。",
+      "connections": ["main-gate", "hengwu-qiuchi"]
+    },
+    {
+      "id": "yingfeng-ting",
+      "name": "迎凤亭",
+      "description": "园中最高处的亭子，可俯瞰全园景色。元妃省亲时曾在此歇息。",
+      "connections": ["main-gate", "hengwu-qiuchi"],
+      "ambience": "开阔、壮丽"
+    },
+    {
+      "id": "hengwu-qiuchi",
+      "name": "蘅芜池",
+      "description": "园中最大的水池，荷花盛开时节美不胜收。池边有柳树垂丝。",
+      "connections": ["qujiang", "yingfeng-ting", "luohong-qiao"],
+      "ambience": "清幽、浪漫"
+    },
+    {
+      "id": "luohong-qiao",
+      "name": "落红桥",
+      "description": "一座小巧的石拱桥，桥下流水潺潺。林黛玉常在此感叹落红成阵。",
+      "connections": ["hengwu-qiuchi", "zihong-xi"],
+      "ambience": "凄美、诗意"
+    },
+    {
+      "id": "zihong-xi",
+      "name": "紫红溪",
+      "description": "一条清澈的小溪，溪边开满各色野花。史湘云曾在此醉卧。",
+      "connections": ["luohong-qiao"],
+      "ambience": "自然、野趣"
+    }
+  ]
+}
