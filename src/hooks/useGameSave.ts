@@ -6,7 +6,7 @@ import { downloadSaveAsFile, readUploadedFile } from '@/lib/saveLoad';
 
 const SAVE_KEY_PREFIX = 'worldsim_save_';
 
-export function useGameSave(engine: Engine | null) {
+export function useGameSave(engine: Engine | null, syncState?: (engine: Engine) => void) {
   const exportSave = useCallback(() => {
     if (!engine) return;
     try {
@@ -24,10 +24,12 @@ export function useGameSave(engine: Engine | null) {
     try {
       const json = await readUploadedFile(file);
       engine.importSave(json);
+      if (syncState) syncState(engine);
     } catch (err) {
       console.error('导入存档失败:', err);
+      throw err;
     }
-  }, [engine]);
+  }, [engine, syncState]);
 
   const saveToLocal = useCallback(() => {
     if (!engine) return;

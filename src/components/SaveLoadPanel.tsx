@@ -6,7 +6,7 @@ export default function SaveLoadPanel({
   onExport, onImport,
 }: {
   onExport: () => void;
-  onImport: (file: File) => void;
+  onImport: (file: File) => Promise<void>;
 }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
@@ -21,11 +21,11 @@ export default function SaveLoadPanel({
     }
   }, [feedbackMessage]);
 
-  const handleImport = () => {
+  const handleImport = async () => {
     const file = fileRef.current?.files?.[0];
     if (file) {
       try {
-        onImport(file);
+        await onImport(file);
         setFeedbackType('success');
         setFeedbackMessage('存档导入成功');
       } catch {

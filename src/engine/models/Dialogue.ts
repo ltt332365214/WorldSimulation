@@ -17,7 +17,7 @@ export class Dialogue {
   }
 
   getCurrentLine(): DialogueLine | null {
-    if (this.currentLineIndex >= this.data.lines.length) return null;
+    if (this.currentLineIndex < 0 || this.currentLineIndex >= this.data.lines.length) return null;
     return this.data.lines[this.currentLineIndex];
   }
 
@@ -27,7 +27,7 @@ export class Dialogue {
   }
 
   selectChoice(choice: DialogueChoice): DialogueLine | null {
-    if (choice.nextLineIndex !== undefined) {
+    if (choice.nextLineIndex !== undefined && choice.nextLineIndex >= 0 && choice.nextLineIndex < this.data.lines.length) {
       this.currentLineIndex = choice.nextLineIndex;
     } else {
       this.currentLineIndex++;
@@ -45,7 +45,7 @@ export class Dialogue {
   }
 
   serialize(): { data: DialogueData; currentLineIndex: number } {
-    return { data: this.data, currentLineIndex: this.currentLineIndex };
+    return { data: { ...this.data, lines: [...this.data.lines], participants: [...this.data.participants] }, currentLineIndex: this.currentLineIndex };
   }
 
   static deserialize(serialized: { data: DialogueData; currentLineIndex: number }): Dialogue {

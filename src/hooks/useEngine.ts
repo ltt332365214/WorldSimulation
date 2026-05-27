@@ -151,6 +151,7 @@ export function useEngine() {
     advanceDialogue,
     exportSave,
     importSave,
+    syncState,
   }), [
     snapshot,
     scene,
@@ -170,5 +171,6 @@ export function useEngine() {
     advanceDialogue,
     exportSave,
     importSave,
+    syncState,
   ]);
 }

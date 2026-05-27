@@ -21,7 +21,7 @@ interface GameUIProps {
   onDialogueChoice: (choiceIndex: number) => void;
   onDialogueAdvance: () => void;
   onExportSave: () => void;
-  onImportSave: (file: File) => void;
+  onImportSave: (file: File) => Promise<void>;
   onSaveLocal: () => void;
   onTick: () => void;
 }

@@ -79,24 +79,16 @@ export class Event {
       case 'time_in_range': {
         const hourRange = params.hourRange as number[];
         const hour = worldState.clock.hour;
+        if (!Array.isArray(hourRange) || hourRange.length < 2) return false;
         return hour >= hourRange[0] && hour < hourRange[1];
       }
       case 'season': {
-        // Check if the current month falls within the named season
         const seasonName = params.season as string;
         const month = worldState.clock.month;
-        // Map common season names to month ranges (Chinese calendar)
-        // This is a simplified mapping; the engine's CalendarConfig.seasons should be used
-        // But since we don't have access to calendar here, use basic ranges
-        const seasonRanges: Record<string, [number, number]> = {
-          '春': [1, 3],
-          '夏': [4, 6],
-          '秋': [7, 9],
-          '冬': [10, 12],
-        };
-        const range = seasonRanges[seasonName];
-        if (!range) return false;
-        return month >= range[0] && month <= range[1];
+        const seasons = worldState.seasons;
+        const match = seasons.find(s => s.name === seasonName);
+        if (!match) return false;
+        return month >= match.startMonth && month <= match.endMonth;
       }
       case 'month': {
         const expectedMonth = params.month as number;
@@ -105,11 +97,18 @@ export class Event {
       case 'relation_threshold': {
         const from = params.from as string;
         const to = params.to as string;
-        const field = params.field as string; // 'favorability', 'trust', 'intimacy'
+        const field = params.field as string;
         const threshold = params.threshold as number;
         const relation = worldState.relations[from]?.[to];
         if (!relation) return false;
-        return (relation[field as keyof RelationData] as number) >= threshold;
+        const numericFields: Record<string, number | undefined> = {
+          favorability: relation.favorability,
+          trust: relation.trust,
+          intimacy: relation.intimacy,
+        };
+        const value = numericFields[field];
+        if (value === undefined) return false;
+        return value >= threshold;
       }
       case 'agent_attribute': {
         const agentId = params.agentId as string;

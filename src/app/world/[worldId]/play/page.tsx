@@ -13,13 +13,24 @@ function PlayContent() {
   const characterId = searchParams.get('character') ?? '';
 
   const engineState = useEngine();
-  const saveState = useGameSave(engineState.engine);
+  const saveState = useGameSave(engineState.engine, engineState.syncState);
 
   useEffect(() => {
     if (worldId && characterId && !engineState.initialized) {
       engineState.initEngine(worldId, characterId);
     }
   }, [worldId, characterId, engineState.initialized]);
+
+  if (!characterId) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <div className="text-center max-w-md p-6 rounded-lg border border-vermillion/30 bg-ink">
+          <p className="text-red-400 mb-2">未指定角色</p>
+          <p className="text-amber-200/40 text-sm">请从角色选择页面进入游戏</p>
+        </div>
+      </div>
+    );
+  }
 
   if (engineState.loading) {
     return (

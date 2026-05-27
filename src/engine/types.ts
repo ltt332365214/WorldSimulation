@@ -240,6 +240,7 @@ export interface WorldState {
   globalFlags: Record<string, unknown>;
   playerAgentId: string;
   eventCooldowns: Record<string, number>; // eventId → remaining cooldown ticks
+  seasons: { name: string; startMonth: number; endMonth: number }[];
 }
 
 // --- Engine output types (for UI) ---

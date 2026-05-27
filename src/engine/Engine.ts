@@ -88,6 +88,7 @@ export class Engine {
       loaded.locations,
       loaded.dialogues,
       playerId,
+      loaded.config.calendar,
     );
 
     // 4. Store config and schedules
@@ -396,6 +397,7 @@ export class Engine {
       raw.worldState?.locations ?? {},
       dialogues,
       playerAgentId,
+      this.config!.calendar,
     );
 
     // Restore schedules

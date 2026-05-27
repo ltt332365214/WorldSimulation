@@ -1,4 +1,4 @@
-import { WorldState as WorldStateType, AgentState, LocationData, ItemData, RelationData, TimeData } from '../types';
+import { WorldState as WorldStateType, AgentState, LocationData, ItemData, RelationData, TimeData, CalendarConfig } from '../types';
 import { Clock } from '../models/Clock';
 import { Agent } from '../models/Agent';
 import { Item } from '../models/Item';
@@ -16,6 +16,7 @@ export class WorldStateManager {
   private dialogues: Map<string, Dialogue>;
   private log: import('../types').LogEntry[];
   private logIdCounter: number;
+  private calendar: CalendarConfig;
 
   constructor() {
     this.agents = new Map();
@@ -25,14 +26,15 @@ export class WorldStateManager {
     this.dialogues = new Map();
     this.log = [];
     this.logIdCounter = 0;
+    this.calendar = {
+      months: [{ name: '一月', days: 30 }],
+      seasons: [{ name: '春', startMonth: 1, endMonth: 3 }],
+      festivals: [],
+      timeUnits: ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'],
+    };
     this.clock = new Clock(
       { year: 1, month: 1, day: 1, hour: 6, minute: 0 },
-      {
-        months: [{ name: '一月', days: 30 }],
-        seasons: [{ name: '春', startMonth: 1, endMonth: 3 }],
-        festivals: [],
-        timeUnits: ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'],
-      },
+      this.calendar,
       15,
     );
     this.state = this.buildState();
@@ -48,6 +50,7 @@ export class WorldStateManager {
     locations: Record<string, LocationData>,
     dialogues: Map<string, Dialogue>,
     playerAgentId: string,
+    calendar: CalendarConfig,
   ): void {
     this.clock = clock;
     this.agents = agents;
@@ -55,6 +58,7 @@ export class WorldStateManager {
     this.relations = relations;
     this.events = events;
     this.dialogues = dialogues;
+    this.calendar = calendar;
     this.state = this.buildState();
     this.state.worldId = worldId;
     this.state.playerAgentId = playerAgentId;
@@ -169,6 +173,7 @@ export class WorldStateManager {
       globalFlags: {},
       playerAgentId: '',
       eventCooldowns: {},
+      seasons: this.calendar.seasons,
     };
   }
 

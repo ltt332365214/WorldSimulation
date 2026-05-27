@@ -27,9 +27,14 @@ export class Clock {
   }
 
   getTickCount(): number {
-    // total minutes from year start for comparison
-    const totalMinutes = this.time.minute + this.time.hour * 60;
-    return totalMinutes;
+    const daysInMonths = this.calendar.months;
+    const daysPerYear = daysInMonths.reduce((sum, m) => sum + (m.days ?? 30), 0);
+    let totalDays = (this.time.year - 1) * daysPerYear;
+    for (let m = 0; m < this.time.month - 1; m++) {
+      totalDays += daysInMonths[m]?.days ?? 30;
+    }
+    totalDays += this.time.day - 1;
+    return totalDays * 24 * 60 + this.time.hour * 60 + this.time.minute;
   }
 
   getTimeOfDay(): string {
@@ -85,7 +90,8 @@ export class Clock {
     }
     // Handle negative days by borrowing from months
     while (this.time.day < 1) {
-      this.time.day += this.calendar.months[this.time.month - 2]?.days ?? 30;
+      const prevMonthIndex = ((this.time.month - 1 - 1) % this.calendar.months.length + this.calendar.months.length) % this.calendar.months.length;
+      this.time.day += this.calendar.months[prevMonthIndex].days;
       this.time.month -= 1;
     }
     // Handle negative months by borrowing from years
@@ -103,14 +109,15 @@ export class Clock {
       this.time.day += Math.floor(this.time.hour / 24);
       this.time.hour = this.time.hour % 24;
     }
-    const daysInMonth = this.calendar.months[this.time.month - 1]?.days ?? 30;
-    if (this.time.day > daysInMonth) {
-      this.time.month += Math.floor((this.time.day - 1) / daysInMonth);
-      this.time.day = ((this.time.day - 1) % daysInMonth) + 1;
+    // Use while loop to handle overflow across multiple months
+    while (this.time.day > (this.calendar.months[this.time.month - 1]?.days ?? 30)) {
+      const daysInCurrentMonth = this.calendar.months[this.time.month - 1]?.days ?? 30;
+      this.time.day -= daysInCurrentMonth;
+      this.time.month += 1;
     }
-    if (this.time.month > this.calendar.months.length) {
-      this.time.year += Math.floor((this.time.month - 1) / this.calendar.months.length);
-      this.time.month = ((this.time.month - 1) % this.calendar.months.length) + 1;
+    while (this.time.month > this.calendar.months.length) {
+      this.time.month -= this.calendar.months.length;
+      this.time.year += 1;
     }
   }
 
@@ -120,5 +127,6 @@ export class Clock {
 
   deserialize(data: TimeData): void {
     this.time = { ...data };
+    this.normalize();
   }
 }
