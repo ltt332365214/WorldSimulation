@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   // fs and path are used in API route handlers to read world data from the filesystem
   serverExternalPackages: ['fs', 'path'],
 
+  
   // In production, copy worlds/ into public/worlds/ before build.
   // Next.js serves public/ files at the root URL path automatically,
   // so /worlds/* will serve public/worlds/* as static files.
