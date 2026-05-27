@@ -10,7 +10,7 @@
       { "type": "location", "agent": "jia-mu", "location": "jia-mu-hall" }
     ],
     "actions": [
-      { "type": "move-agent", "agents": ["jia-baoyu", "lin-daiyu", "xue-baochai", "wang-xifeng"], "target": "jia-mu-hall" },
+      { "type": "move-agent", "agents": ["jia-baoyu", "lin-daiyu", "xue-baochai", "wang-xifeng", "xue-pan"], "target": "jia-mu-hall" },
       { "type": "modify-relation", "from": "jia-baoyu", "to": "jia-mu", "affection": 1 },
       { "type": "modify-relation", "from": "lin-daiyu", "to": "jia-mu", "affection": 1 },
       { "type": "notify", "message": "众儿孙至贾母正厅行晨省之礼，问安叩拜。" }
@@ -29,7 +29,7 @@
     ],
     "actions": [
       { "type": "move-agent", "agents": ["jia-mu"], "target": "jia-mu-hall" },
-      { "type": "restore-agent", "agents": ["jia-baoyu", "lin-daiyu", "xue-baochai", "wang-xifeng", "jia-mu"], "attribute": "体力上限", "value": 20 },
+      { "type": "restore-agent", "agents": ["jia-baoyu", "lin-daiyu", "xue-baochai", "wang-xifeng", "jia-mu", "xue-pan"], "attribute": "体力", "value": 20 },
       { "type": "notify", "message": "早膳时分，众人各自用餐。贾母在正厅设早膳，宝玉与黛玉在旁侍奉。" }
     ],
     "cooldown": 1,
@@ -45,7 +45,7 @@
       { "type": "time", "hourRange": [12, 13] }
     ],
     "actions": [
-      { "type": "restore-agent", "agents": ["jia-baoyu", "lin-daiyu", "xue-baochai", "wang-xifeng", "jia-mu"], "attribute": "体力上限", "value": 25 },
+      { "type": "restore-agent", "agents": ["jia-baoyu", "lin-daiyu", "xue-baochai", "wang-xifeng", "jia-mu", "xue-pan"], "attribute": "体力", "value": 25 },
       { "type": "notify", "message": "午膳时分，饭菜丰盛。贾母正厅摆饭，凤姐张罗伺候。" }
     ],
     "cooldown": 1,
@@ -62,7 +62,7 @@
       { "type": "location", "agent": "jia-mu", "location": "jia-mu-hall" }
     ],
     "actions": [
-      { "type": "move-agent", "agents": ["jia-baoyu", "lin-daiyu"], "target": "jia-mu-hall" },
+      { "type": "move-agent", "agents": ["jia-baoyu", "lin-daiyu", "xue-pan", "xue-baochai", "wang-xifeng"], "target": "jia-mu-hall" },
       { "type": "modify-relation", "from": "jia-baoyu", "to": "jia-mu", "affection": 1 },
       { "type": "modify-relation", "from": "lin-daiyu", "to": "jia-mu", "affection": 1 },
       { "type": "notify", "message": "傍晚时分，宝玉与黛玉至贾母处行昏定之礼，陪老太太说笑解闷。" }
@@ -85,7 +85,8 @@
       { "type": "move-agent", "agents": ["xue-baochai"], "target": "hengwu-yuan" },
       { "type": "move-agent", "agents": ["wang-xifeng"], "target": "fengjie-yard" },
       { "type": "move-agent", "agents": ["jia-mu"], "target": "jia-mu-hall" },
-      { "type": "restore-agent", "agents": ["jia-baoyu", "lin-daiyu", "xue-baochai", "wang-xifeng", "jia-mu"], "attribute": "体力上限", "value": 30 },
+      { "type": "move-agent", "agents": ["xue-pan"], "target": "street" },
+      { "type": "restore-agent", "agents": ["jia-baoyu", "lin-daiyu", "xue-baochai", "wang-xifeng", "jia-mu", "xue-pan"], "attribute": "体力", "value": 30 },
       { "type": "notify", "message": "夜深人静，众人各自回房安寝。" }
     ],
     "cooldown": 1,

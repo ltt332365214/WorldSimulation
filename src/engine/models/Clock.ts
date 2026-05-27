@@ -73,9 +73,28 @@ export class Clock {
   }
 
   private normalize(): void {
-    const totalMinutes = this.time.hour * 60 + this.time.minute;
-    const daysInMonth = this.calendar.months[this.time.month - 1]?.days ?? 30;
+    // Handle negative minutes by borrowing from hours
+    while (this.time.minute < 0) {
+      this.time.minute += 60;
+      this.time.hour -= 1;
+    }
+    // Handle negative hours by borrowing from days
+    while (this.time.hour < 0) {
+      this.time.hour += 24;
+      this.time.day -= 1;
+    }
+    // Handle negative days by borrowing from months
+    while (this.time.day < 1) {
+      this.time.day += this.calendar.months[this.time.month - 2]?.days ?? 30;
+      this.time.month -= 1;
+    }
+    // Handle negative months by borrowing from years
+    while (this.time.month < 1) {
+      this.time.month += this.calendar.months.length;
+      this.time.year -= 1;
+    }
 
+    // Handle overflow
     if (this.time.minute >= 60) {
       this.time.hour += Math.floor(this.time.minute / 60);
       this.time.minute = this.time.minute % 60;
@@ -84,6 +103,7 @@ export class Clock {
       this.time.day += Math.floor(this.time.hour / 24);
       this.time.hour = this.time.hour % 24;
     }
+    const daysInMonth = this.calendar.months[this.time.month - 1]?.days ?? 30;
     if (this.time.day > daysInMonth) {
       this.time.month += Math.floor((this.time.day - 1) / daysInMonth);
       this.time.day = ((this.time.day - 1) % daysInMonth) + 1;

@@ -30,6 +30,7 @@ export class TickEngine {
   tick(): TickResult {
     const clock = this.stateManager.getClock();
     const newTime = clock.tick();
+    this.stateManager.advanceTick();
 
     // 1. Run systems (ScheduleSystem handles NPC behavior, DayNightSystem handles time effects, etc.)
     for (const system of this.systems) {
@@ -126,6 +127,14 @@ export class TickEngine {
         return { tick, type: 'action', description: describeAction(action, agent.name), agentId: agent.id };
       }
     }
+  }
+
+  public buildSceneDescriptionPublic(): SceneDescription {
+    return this.buildSceneDescription();
+  }
+
+  public buildAvailableActionsPublic(): Action[] {
+    return this.buildAvailableActions();
   }
 
   private buildSceneDescription(): SceneDescription {

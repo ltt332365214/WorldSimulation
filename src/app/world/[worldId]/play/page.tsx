@@ -38,6 +38,12 @@ function PlayContent() {
         <div className="text-center max-w-md p-6 rounded-lg border border-vermillion/30 bg-ink">
           <p className="text-red-400 mb-2">{engineState.error}</p>
           <p className="text-amber-200/40 text-sm">请检查世界数据或角色配置是否正确</p>
+          <button
+            onClick={() => engineState.initEngine(worldId, characterId)}
+            className="mt-4 px-4 py-2 rounded border border-bronze/40 text-amber-200/70 hover:border-bronze-light hover:text-amber-100 transition-all"
+          >
+            重新尝试
+          </button>
         </div>
       </div>
     );

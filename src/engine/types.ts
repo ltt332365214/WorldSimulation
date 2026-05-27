@@ -278,6 +278,7 @@ export interface NearbyItem {
 }
 
 export interface LogEntry {
+  id: number;
   tick: number;
   type: 'action' | 'event' | 'move' | 'dialogue' | 'system' | 'relation';
   description: string;

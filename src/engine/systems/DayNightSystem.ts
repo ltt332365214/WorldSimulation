@@ -56,16 +56,10 @@ export class DayNightSystem extends SystemBase {
       if (isNight) {
         // Sleeping agents recover; awake agents lose sleep value faster at night
         if ((state.currentAction?.type as ActionType) === 'rest') {
-          agent.setState({
-            ...state,
-            sleepValue: Math.min(100, state.sleepValue + 2),
-            energy: Math.min(100, state.energy + 1),
-          });
+          agent.modifyNeed('sleepValue', 2);
+          agent.modifyNeed('energy', 1);
         } else {
-          agent.setState({
-            ...state,
-            sleepValue: Math.max(0, state.sleepValue - 1),
-          });
+          agent.modifyNeed('sleepValue', -1);
 
           // Non-player agents tend to seek rest at night if sleep is low
           if (state.sleepValue < 30 && (state.currentAction?.type as ActionType) !== 'rest') {
@@ -83,11 +77,8 @@ export class DayNightSystem extends SystemBase {
       } else {
         // Daytime: natural energy recovery if resting
         if ((state.currentAction?.type as ActionType) === 'rest') {
-          agent.setState({
-            ...state,
-            sleepValue: Math.min(100, state.sleepValue + 1),
-            energy: Math.min(100, state.energy + 0.5),
-          });
+          agent.modifyNeed('sleepValue', 1);
+          agent.modifyNeed('energy', 0.5);
         }
       }
     }

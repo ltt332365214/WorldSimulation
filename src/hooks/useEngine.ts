@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect, useMemo } from 'react';
 import { Engine } from '@/engine/Engine';
 import {
   WorldState,
@@ -131,7 +131,7 @@ export function useEngine() {
     };
   }, []);
 
-  return {
+  return useMemo(() => ({
     engine: engineRef.current,
     snapshot,
     scene,
@@ -151,5 +151,24 @@ export function useEngine() {
     advanceDialogue,
     exportSave,
     importSave,
-  };
+  }), [
+    snapshot,
+    scene,
+    actions,
+    log,
+    activeDialogue,
+    currentDialogueLine,
+    dialogueChoices,
+    loading,
+    error,
+    initialized,
+    initEngine,
+    performAction,
+    tick,
+    startDialogue,
+    makeDialogueChoice,
+    advanceDialogue,
+    exportSave,
+    importSave,
+  ]);
 }

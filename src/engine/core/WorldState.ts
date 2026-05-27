@@ -15,6 +15,7 @@ export class WorldStateManager {
   private events: Event[];
   private dialogues: Map<string, Dialogue>;
   private log: import('../types').LogEntry[];
+  private logIdCounter: number;
 
   constructor() {
     this.agents = new Map();
@@ -23,6 +24,7 @@ export class WorldStateManager {
     this.events = [];
     this.dialogues = new Map();
     this.log = [];
+    this.logIdCounter = 0;
     this.clock = new Clock(
       { year: 1, month: 1, day: 1, hour: 6, minute: 0 },
       {
@@ -99,6 +101,7 @@ export class WorldStateManager {
   }
 
   addLogEntry(entry: import('../types').LogEntry): void {
+    entry.id = this.logIdCounter++;
     this.log.push(entry);
     // Keep log bounded
     if (this.log.length > 200) {
@@ -169,10 +172,13 @@ export class WorldStateManager {
     };
   }
 
+  advanceTick(): void {
+    this.state.tickCount++;
+  }
+
   // Build a snapshot for UI consumption
   getSnapshot(): WorldStateType {
     this.state.clock = this.clock.getTime();
-    this.state.tickCount++;
 
     // Update agent states in snapshot
     for (const [id, agent] of this.agents) {

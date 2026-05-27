@@ -26,15 +26,20 @@ function CharacterSelectContent() {
         const indexRes = await fetch(`/worlds/${worldId}/agents/_index.json`);
         const agentFiles: string[] = await indexRes.json();
 
-        const agentList: AgentData[] = [];
-        for (const file of agentFiles) {
-          if (!file.startsWith('_')) {
-            const res = await fetch(`/worlds/${worldId}/agents/${file}`);
-            const data: AgentData = await res.json();
-            agentList.push(data);
-          }
-        }
-        setAgents(agentList);
+        const fetchResults = await Promise.all(
+          agentFiles
+            .filter(file => !file.startsWith('_'))
+            .map(async (file) => {
+              try {
+                const res = await fetch(`/worlds/${worldId}/agents/${file}`);
+                const data: AgentData = await res.json();
+                return data;
+              } catch {
+                return null;
+              }
+            })
+        );
+        setAgents(fetchResults.filter((a): a is AgentData => a !== null));
       } catch (err) {
         setError(err instanceof Error ? err.message : '加载失败');
       } finally {

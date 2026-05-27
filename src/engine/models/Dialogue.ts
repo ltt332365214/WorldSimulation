@@ -41,10 +41,7 @@ export class Dialogue {
   }
 
   isFinished(): boolean {
-    const line = this.getCurrentLine();
-    if (!line) return true;
-    // Finished if no choices and this is the last line
-    return !line.choices && this.currentLineIndex >= this.data.lines.length - 1;
+    return this.currentLineIndex >= this.data.lines.length;
   }
 
   serialize(): { data: DialogueData; currentLineIndex: number } {

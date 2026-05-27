@@ -1,5 +1,6 @@
 'use client';
 
+import { useMemo, useCallback } from 'react';
 import { Action, WorldState } from '@/engine/types';
 
 const ACTION_LABELS: Record<string, string> = {
@@ -23,7 +24,7 @@ export default function ActionMenu({
   onAction: (action: Action) => void;
   snapshot: WorldState;
 }) {
-  const resolveTargetName = (action: Action): string => {
+  const resolveTargetName = useCallback((action: Action): string => {
     if (!action.target) return '';
     const target = action.target;
 
@@ -43,14 +44,17 @@ export default function ActionMenu({
     }
 
     return target;
-  };
+  }, [snapshot]);
 
   // Group actions by type for better display
-  const moveActions = actions.filter(a => a.type === 'move');
-  const socialActions = actions.filter(a => ['talk', 'greet'].includes(a.type));
-  const itemActions = actions.filter(a => ['examine', 'use_item', 'gift'].includes(a.type));
-  const miscActions = actions.filter(a => ['wait', 'rest'].includes(a.type));
-  const otherActions = actions.filter(a => !['move', 'talk', 'greet', 'examine', 'use_item', 'gift', 'wait', 'rest'].includes(a.type));
+  const { moveActions, socialActions, itemActions, miscActions, otherActions } = useMemo(() => {
+    const moveActions = actions.filter(a => a.type === 'move');
+    const socialActions = actions.filter(a => ['talk', 'greet'].includes(a.type));
+    const itemActions = actions.filter(a => ['examine', 'use_item', 'gift'].includes(a.type));
+    const miscActions = actions.filter(a => ['wait', 'rest'].includes(a.type));
+    const otherActions = actions.filter(a => !['move', 'talk', 'greet', 'examine', 'use_item', 'gift', 'wait', 'rest'].includes(a.type));
+    return { moveActions, socialActions, itemActions, miscActions, otherActions };
+  }, [actions]);
 
   return (
     <div className="rounded-lg border border-bronze/30 bg-ink p-4">

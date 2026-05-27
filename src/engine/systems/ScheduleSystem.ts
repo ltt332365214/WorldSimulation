@@ -20,7 +20,13 @@ export class ScheduleSystem extends SystemBase {
   }
 
   loadSchedule(schedule: ScheduleData): void {
-    this.schedules.set(schedule.id, schedule);
+    // Sort entries once at load time so findMatchingEntry doesn't re-sort every tick
+    const sortedEntries = [...schedule.entries].sort((a, b) => {
+      const aTime = a.hour * 60 + a.minute;
+      const bTime = b.hour * 60 + b.minute;
+      return aTime - bTime;
+    });
+    this.schedules.set(schedule.id, { ...schedule, entries: sortedEntries });
   }
 
   onTick(stateManager: WorldStateManager): void {
@@ -50,14 +56,9 @@ export class ScheduleSystem extends SystemBase {
   }
 
   private findMatchingEntry(schedule: ScheduleData, hour: number, minute: number): ScheduleEntry | null {
-    const sorted = [...schedule.entries].sort((a, b) => {
-      const aTime = a.hour * 60 + a.minute;
-      const bTime = b.hour * 60 + b.minute;
-      return aTime - bTime;
-    });
-
+    // Entries are pre-sorted at load time; no need to re-sort here
     let best: ScheduleEntry | null = null;
-    for (const entry of sorted) {
+    for (const entry of schedule.entries) {
       if (entry.hour * 60 + entry.minute <= hour * 60 + minute) {
         best = entry;
       }

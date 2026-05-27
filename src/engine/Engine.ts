@@ -25,11 +25,13 @@ import { Item } from './models/Item';
 import { Relation } from './models/Relation';
 import { Event } from './models/Event';
 import { Dialogue } from './models/Dialogue';
+import { EffectExecutor } from './core/EffectExecutor';
 
 export class Engine {
   private stateManager: WorldStateManager;
   private configLoader: ConfigLoader;
-  private tickEngine: TickEngine;
+  private tickEngine!: TickEngine;
+  private effectExecutor!: EffectExecutor;
   private eventBus: EventBus;
   private schedules: Record<string, ScheduleData>;
   private config: WorldConfig | null;
@@ -39,18 +41,9 @@ export class Engine {
     this.stateManager = new WorldStateManager();
     this.configLoader = new ConfigLoader();
     this.eventBus = new EventBus();
-    this.tickEngine = new TickEngine(this.stateManager, this.eventBus);
     this.schedules = {};
     this.config = null;
     this.initialized = false;
-
-    // Auto-start dialogues when triggered by events (EventSystem uses 'dialogue_trigger')
-    this.eventBus.on('dialogue_trigger', (_event: string, data: unknown) => {
-      const { dialogueId } = data as { dialogueId: string };
-      if (this.initialized && !this.activeDialogueId) {
-        this.startDialogue(dialogueId);
-      }
-    });
   }
 
   // Initialize: load world config, set player agent
@@ -81,6 +74,7 @@ export class Engine {
     );
     // Preserve the full state including birthdate, inventory, memory, etc.
     controlledPlayer.setState(playerState);
+    controlledPlayer.setControlled(true);
     loaded.agents.set(playerId, controlledPlayer);
 
     // 3. Initialize WorldStateManager with all loaded data
@@ -102,8 +96,18 @@ export class Engine {
 
     // 5. Create TickEngine
     this.tickEngine = new TickEngine(this.stateManager, this.eventBus);
+    this.effectExecutor = new EffectExecutor(this.stateManager, this.eventBus);
 
-    // 6. Register systems and load schedules
+    // 6. Register dialogue_trigger event listener
+    this.eventBus.on('dialogue_trigger', (_event: string, data: unknown) => {
+      if (!data || typeof (data as Record<string, unknown>).dialogueId !== 'string') return;
+      const { dialogueId } = data as { dialogueId: string };
+      if (this.initialized && !this.activeDialogueId) {
+        this.startDialogue(dialogueId);
+      }
+    });
+
+    // 7. Register systems and load schedules
     const scheduleSystem = new ScheduleSystem();
     for (const schedule of Object.values(loaded.schedules)) {
       scheduleSystem.loadSchedule(schedule);
@@ -148,172 +152,14 @@ export class Engine {
     if (!this.initialized) {
       throw new Error('Engine not initialized. Call init() first.');
     }
-    const playerAgent = this.stateManager.getPlayerAgent();
-    if (!playerAgent) {
-      return {
-        locationId: '',
-        locationName: '',
-        description: '',
-        ambience: '',
-        timeOfDay: '',
-        nearbyAgents: [],
-        nearbyItems: [],
-        availableExits: [],
-      };
-    }
-
-    const snapshot = this.stateManager.getSnapshot();
-    const location = snapshot.locations[playerAgent.location];
-    const clock = this.stateManager.getClock();
-
-    const nearbyAgents = this.stateManager
-      .getAgentsAtLocation(playerAgent.location)
-      .filter(a => a.id !== playerAgent.id)
-      .map(a => ({
-        id: a.id,
-        name: a.name,
-        currentAction: a.getState().currentAction?.type ?? '空闲',
-        currentEmotion: a.getState().currentEmotion,
-      }));
-
-    const nearbyItems = this.stateManager
-      .getItemsAtLocation(playerAgent.location)
-      .map(i => ({
-        id: i.id,
-        name: i.name,
-        interactable: i.getData().interactable,
-      }));
-
-    return {
-      locationId: playerAgent.location,
-      locationName: location?.name ?? '未知地点',
-      description: location?.description ?? '',
-      ambience: location?.ambience ?? '',
-      timeOfDay: clock.getTimeOfDay(),
-      nearbyAgents,
-      nearbyItems,
-      availableExits: location?.connections ?? [],
-    };
+    return this.tickEngine.buildSceneDescriptionPublic();
   }
 
   getAvailableActions(): Action[] {
     if (!this.initialized) {
       throw new Error('Engine not initialized. Call init() first.');
     }
-    // Rebuild available actions from the current state without advancing time.
-    // This mirrors the logic in TickEngine.buildAvailableActions() but runs
-    // as a read-only query so no tick occurs.
-    const playerAgent = this.stateManager.getPlayerAgent();
-    if (!playerAgent) return [];
-
-    const snapshot = this.stateManager.getSnapshot();
-    const location = snapshot.locations[playerAgent.location];
-    const actions: Action[] = [];
-
-    // Move to connected locations
-    if (location?.connections) {
-      for (const connId of location.connections) {
-        const targetLocation = snapshot.locations[connId];
-        if (targetLocation) {
-          actions.push({
-            id: `action_move_${connId}`,
-            type: 'move',
-            target: connId,
-            duration: location.travelTime?.[connId] ?? 1,
-            elapsed: 0,
-            interruptible: true,
-          });
-        }
-      }
-    }
-
-    // Talk to nearby agents
-    const nearbyAgents = this.stateManager.getAgentsAtLocation(playerAgent.location);
-    for (const agent of nearbyAgents) {
-      if (agent.id !== playerAgent.id) {
-        actions.push({
-          id: `action_talk_${agent.id}`,
-          type: 'talk',
-          target: agent.id,
-          duration: 1,
-          elapsed: 0,
-          interruptible: true,
-        });
-        actions.push({
-          id: `action_greet_${agent.id}`,
-          type: 'greet',
-          target: agent.id,
-          duration: 1,
-          elapsed: 0,
-          interruptible: true,
-        });
-      }
-    }
-
-    // Examine items, use items, and gift items
-    const nearbyItems = this.stateManager.getItemsAtLocation(playerAgent.location);
-    for (const item of nearbyItems) {
-      actions.push({
-        id: `action_examine_${item.id}`,
-        type: 'examine',
-        target: item.id,
-        duration: 1,
-        elapsed: 0,
-        interruptible: true,
-      });
-      if (item.getData().interactable.includes('use')) {
-        actions.push({
-          id: `action_use_item_${item.id}`,
-          type: 'use_item',
-          target: item.id,
-          duration: 1,
-          elapsed: 0,
-          interruptible: true,
-        });
-      }
-      if (item.getData().interactable.includes('gift')) {
-        for (const agent of nearbyAgents) {
-          if (agent.id !== playerAgent.id) {
-            actions.push({
-              id: `action_gift_${agent.id}_${item.id}`,
-              type: 'gift',
-              target: agent.id,
-              duration: 1,
-              elapsed: 0,
-              interruptible: true,
-            });
-          }
-        }
-      }
-    }
-
-    // Always-available actions
-    actions.push({
-      id: 'action_wait',
-      type: 'wait',
-      target: undefined,
-      duration: 1,
-      elapsed: 0,
-      interruptible: true,
-    });
-    actions.push({
-      id: `action_examine_${playerAgent.location}`,
-      type: 'examine',
-      target: playerAgent.location,
-      duration: 1,
-      elapsed: 0,
-      interruptible: true,
-    });
-    actions.push({
-      id: 'action_rest',
-      type: 'rest',
-      target: undefined,
-      duration: 1,
-      elapsed: 0,
-      interruptible: true,
-    });
-
-    return actions;
+    return this.tickEngine.buildAvailableActionsPublic();
   }
 
   getWorldId(): string {
@@ -375,8 +221,9 @@ export class Engine {
 
     // Execute choice effects if present
     if (choice.effects) {
+      const tick = this.stateManager.getSnapshot().tickCount;
       for (const effect of choice.effects) {
-        this.executeDialogueEffect(effect);
+        this.effectExecutor.execute(effect, tick);
       }
     }
 
@@ -426,54 +273,6 @@ export class Engine {
       currentLine: dialogue.getCurrentLine(),
       choices: dialogue.getChoices(),
     };
-  }
-
-  private executeDialogueEffect(effect: import('./types').EventEffect): void {
-    switch (effect.type) {
-      case 'modify_attribute': {
-        const agentId = effect.params.agentId as string;
-        const attr = effect.params.attribute as string;
-        const delta = effect.params.delta as number;
-        const agent = this.stateManager.getAgent(agentId);
-        if (agent) {
-          agent.modifyAttribute(attr, delta);
-        }
-        break;
-      }
-      case 'modify_relation': {
-        const from = effect.params.from as string;
-        const to = effect.params.to as string;
-        const field = effect.params.field as string;
-        const delta = effect.params.delta as number;
-        const relation = this.stateManager.getRelation(from, to);
-        if (relation) {
-          if (field === 'favorability') relation.modifyFavorability(delta);
-          if (field === 'trust') relation.modifyTrust(delta);
-          if (field === 'intimacy') relation.modifyIntimacy(delta);
-        }
-        break;
-      }
-      case 'set_flag': {
-        const flagName = effect.params.flagName as string;
-        const value = effect.params.value;
-        this.stateManager.setGlobalFlag(flagName, value);
-        break;
-      }
-      case 'move_agent': {
-        const agentId = effect.params.agentId as string;
-        const locationId = effect.params.locationId as string;
-        const agent = this.stateManager.getAgent(agentId);
-        if (agent) {
-          agent.moveTo(locationId);
-        }
-        break;
-      }
-      case 'dialogue': {
-        const dialogueId = effect.params.dialogueId as string;
-        this.eventBus.emit('dialogue_triggered', { dialogueId });
-        break;
-      }
-    }
   }
 
   // Save/load

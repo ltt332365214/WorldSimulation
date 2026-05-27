@@ -60,6 +60,10 @@ export class Agent {
     this.state.currentEmotion = emotion;
   }
 
+  setControlled(v: boolean): void {
+    this.state.controlled = v;
+  }
+
   addMemory(entry: MemoryEntry): void {
     this.state.memory.shortTerm.push(entry);
     // Keep short-term memory bounded
@@ -90,7 +94,17 @@ export class Agent {
   modifyAttribute(key: string, delta: number): void {
     if (this.state.attributes[key] !== undefined) {
       this.state.attributes[key] += delta;
+    } else if (this.state.personality[key] !== undefined) {
+      this.state.personality[key] += delta;
     }
+  }
+
+  modifyNeed(field: 'hunger' | 'sleepValue' | 'energy' | 'health', delta: number): void {
+    this.state[field] = Math.min(100, Math.max(0, this.state[field] + delta));
+  }
+
+  setNeed(field: 'hunger' | 'sleepValue' | 'energy' | 'health', value: number): void {
+    this.state[field] = Math.min(100, Math.max(0, value));
   }
 
   tickNeeds(): void {

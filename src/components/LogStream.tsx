@@ -1,7 +1,7 @@
 'use client';
 
 import { LogEntry } from '@/engine/types';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 
 const TYPE_COLORS: Record<string, string> = {
   move: 'text-jade-light',
@@ -12,21 +12,38 @@ const TYPE_COLORS: Record<string, string> = {
   relation: 'text-vermillion',
 };
 
+function isNearBottom(el: HTMLDivElement): boolean {
+  return el.scrollTop + el.clientHeight >= el.scrollHeight - 50;
+}
+
 export default function LogStream({ log }: { log: LogEntry[] }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const wasNearBottomRef = useRef(true);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollContainerRef.current;
+    if (el) {
+      wasNearBottomRef.current = isNearBottom(el);
+    }
+  }, []);
 
   useEffect(() => {
-    if (ref.current) {
-      ref.current.scrollTop = ref.current.scrollHeight;
+    const el = scrollContainerRef.current;
+    if (el && wasNearBottomRef.current) {
+      el.scrollTop = el.scrollHeight;
     }
   }, [log]);
 
   return (
     <div>
       <h3 className="text-sm font-bold text-amber-100 mb-2">事件日志</h3>
-      <div ref={ref} className="space-y-1 max-h-64 overflow-y-auto">
-        {log.slice(-50).map((entry, idx) => (
-          <div key={idx} className="log-entry text-sm">
+      <div
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+        className="space-y-1 max-h-64 overflow-y-auto"
+      >
+        {log.slice(-50).map((entry) => (
+          <div key={entry.id ?? `${entry.tick}-${entry.description}`} className="log-entry text-sm">
             <span className={`${TYPE_COLORS[entry.type] ?? 'text-amber-200/60'} leading-relaxed`}>
               {entry.description}
             </span>

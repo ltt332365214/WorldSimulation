@@ -1,6 +1,7 @@
 import { WorldStateManager } from '../core/WorldState';
 import { SystemBase } from './SystemBase';
 import { EventBus } from '../core/EventBus';
+import { EffectExecutor } from '../core/EffectExecutor';
 import { Action, ActionType, ActionRequirement, LogEntry, DialogueData } from '../types';
 import { Agent } from '../models/Agent';
 import { Item } from '../models/Item';
@@ -11,6 +12,7 @@ export class InteractionSystem extends SystemBase {
   name = 'InteractionSystem';
 
   private eventBus: EventBus;
+  private effectExecutor!: EffectExecutor;
   private activeDialogues: Map<string, Dialogue>;
 
   constructor(eventBus: EventBus) {
@@ -20,6 +22,7 @@ export class InteractionSystem extends SystemBase {
   }
 
   onInit(stateManager: WorldStateManager): void {
+    this.effectExecutor = new EffectExecutor(stateManager, this.eventBus);
     this.eventBus.on('dialogue_trigger', (_event, data) => {
       const { dialogueId } = data as { dialogueId: string };
       this.initiateDialogue(dialogueId, stateManager);
@@ -91,7 +94,7 @@ export class InteractionSystem extends SystemBase {
     if (choice.effects) {
       const tick = stateManager.getSnapshot().tickCount;
       for (const effect of choice.effects) {
-        this.applyDialogueEffect(effect, stateManager, tick);
+        this.effectExecutor.execute(effect, tick);
       }
     }
 
@@ -246,16 +249,10 @@ export class InteractionSystem extends SystemBase {
         agent.modifyAttribute(params.attribute as string, params.delta as number);
         break;
       case 'modify_energy':
-        agent.setState({
-          ...agent.getState(),
-          energy: Math.min(100, Math.max(0, agent.getState().energy + (params.delta as number))),
-        });
+        agent.modifyNeed('energy', params.delta as number);
         break;
       case 'modify_hunger':
-        agent.setState({
-          ...agent.getState(),
-          hunger: Math.min(100, Math.max(0, agent.getState().hunger + (params.delta as number))),
-        });
+        agent.modifyNeed('hunger', params.delta as number);
         break;
       case 'add_item':
         agent.addInventoryItem(params.itemId as string);
@@ -265,40 +262,6 @@ export class InteractionSystem extends SystemBase {
         break;
       case 'trigger_event':
         this.eventBus.emit('trigger_event', { eventId: params.eventId as string });
-        break;
-    }
-  }
-
-  private applyDialogueEffect(effect: import('../types').EventEffect, stateManager: WorldStateManager, tick: number): void {
-    const { type, params } = effect;
-
-    switch (type) {
-      case 'modify_relation': {
-        const fromId = params.fromId as string;
-        const toId = params.toId as string;
-        const relation = stateManager.getRelation(fromId, toId);
-        if (relation) {
-          const field = params.field as string;
-          const delta = params.delta as number;
-          if (field === 'favorability') relation.modifyFavorability(delta);
-          else if (field === 'trust') relation.modifyTrust(delta);
-          else if (field === 'intimacy') relation.modifyIntimacy(delta);
-        }
-        break;
-      }
-      case 'modify_attribute': {
-        const agentId = params.agentId as string;
-        const agent = stateManager.getAgent(agentId);
-        if (agent) {
-          agent.modifyAttribute(params.attribute as string, params.delta as number);
-        }
-        break;
-      }
-      case 'set_flag':
-        stateManager.setGlobalFlag(params.flagName as string, params.value);
-        break;
-      case 'trigger_event':
-        this.eventBus.emit('trigger_event', { eventId: params.targetEventId as string });
         break;
     }
   }

@@ -28,6 +28,10 @@ export default function StatusPanel({ player }: { player: AgentState | undefined
             </div>
             <div className="h-1.5 rounded-full bg-ink-light overflow-hidden">
               <div
+                role="progressbar"
+                aria-valuenow={Math.round(n.value)}
+                aria-valuemin={0}
+                aria-valuemax={100}
                 className={`need-bar h-full rounded-full ${n.color}`}
                 style={{ width: `${Math.max(0, Math.min(100, n.value))}%` }}
               />
