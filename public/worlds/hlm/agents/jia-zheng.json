@@ -1,0 +1,26 @@
+{
+  "id": "jia-zheng",
+  "name": "贾政",
+  "gender": "男",
+  "birthdate": { "year": 40, "month": 6, "day": 15, "hour": 8, "minute": 0 },
+  "description": "荣国府当家，宝玉之父。为人严厉端方，笃信礼教，望子成龙。",
+  "attributes": {
+    "体质": 6,
+    "智识": 8,
+    "情感敏感度": 3,
+    "社交能力": 4,
+    "诗才": 5,
+    "心机": 6,
+    "体力上限": 6,
+    "体力": 80
+  },
+  "personality": {
+    "外向度": 2,
+    "情绪稳定性": 8,
+    "勤劳度": 9,
+    "谨慎度": 9,
+    "敏感度": 3
+  },
+  "scheduleRef": "default",
+  "defaultLocation": "jia-zheng-study"
+}

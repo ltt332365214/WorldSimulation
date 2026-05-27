@@ -48,6 +48,6 @@
       { "type": "emotion", "target": "情绪稳定性", "value": 1, "duration": 4, "condition": "阅读" }
     ],
     "rarity": "rare",
-    "ownerRef": null
+    "ownerRef": "jia-zheng-study"
   }
 ]

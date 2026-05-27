@@ -8,7 +8,8 @@
     "社交能力": { "description": "与人交往、应酬周旋的能力，影响说服、调解、获得好感的效果", "min": 1, "max": 10, "default": 5 },
     "诗才": { "description": "诗词创作的天赋与技巧，影响诗社表现与创作质量", "min": 1, "max": 10, "default": 3 },
     "心机": { "description": "谋略与算计的能力，影响暗中操控、权谋争斗的效果", "min": 1, "max": 10, "default": 3 },
-    "体力上限": { "description": "每日可消耗的体力总量，影响可执行行动的数量", "min": 10, "max": 100, "default": 50 }
+    "体力上限": { "description": "每日可消耗的体力总量，影响可执行行动的数量", "min": 10, "max": 100, "default": 50 },
+    "体力": { "description": "当前体力值，执行行动时消耗，进食与休息时恢复", "min": 0, "max": "体力上限", "default": 80 }
   },
   "personality": {
     "外向度": { "description": "主动与人交往的倾向，外向者更喜欢群聚，内向者偏爱独处", "min": 1, "max": 10, "default": 5 },

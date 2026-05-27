@@ -38,7 +38,7 @@
   {
     "id": "item-poetrydraft",
     "name": "诗稿",
-    "category": "furniture",
+    "category": "misc",
     "description": "手写的诗稿，墨迹或新或旧，纸上或有泪痕。黛玉的诗稿最为珍贵，葬花词、秋窗风雨夕等篇皆写于此。是人物才情与情感的实物寄托。",
     "portable": true,
     "effects": [

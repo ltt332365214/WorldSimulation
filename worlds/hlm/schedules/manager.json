@@ -14,6 +14,7 @@
     { "hour": 14, "action": "理事调度", "location": "fengjie-yard", "description": "继续理事，与来回事的管家仆妇交接，处理账目纠纷" },
     { "hour": 15, "action": "应酬待客", "location": "jia-mu-hall", "description": "若有来客则应酬招待，或陪贾母说笑解闷" },
     { "hour": 16, "action": "巡查大观园", "location": "daguanyuan-gate", "description": "偶尔去大观园巡查各院用度，检查丫鬟仆妇是否尽职" },
+    { "hour": 17, "minute": 0, "action": "休息", "target": "fengjie-yard", "location": "fengjie-yard", "description": "巡查归来，在院中稍作歇息，品茶养神" },
     { "hour": 18, "action": "昏定", "location": "jia-mu-hall", "description": "前往贾母处行昏定之礼，陪老太太说笑，是凤姐表现的最佳时机" },
     { "hour": 19, "action": "晚膳", "location": "jia-mu-hall", "description": "在贾母处用晚膳，张罗伺候众人" },
     { "hour": 20, "action": "回院理事", "location": "fengjie-yard", "description": "回院处理未完之事，审看账册，吩咐明日安排" },

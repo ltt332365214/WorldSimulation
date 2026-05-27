@@ -16,6 +16,7 @@ export class EffectExecutor {
 
     switch (type) {
       case 'modify_attribute': {
+        if (!params.agentId || !params.attribute || params.delta == null) break;
         const agentId = params.agentId as string;
         const attribute = params.attribute as string;
         const delta = params.delta as number;
@@ -33,6 +34,7 @@ export class EffectExecutor {
         break;
       }
       case 'modify_relation': {
+        if ((!params.fromId && !params.from) || (!params.toId && !params.to) || !params.field || params.delta == null) break;
         const fromId = (params.fromId ?? params.from) as string;
         const toId = (params.toId ?? params.to) as string;
         const field = params.field as string;
@@ -47,17 +49,20 @@ export class EffectExecutor {
         break;
       }
       case 'set_flag': {
+        if (!params.flagName) break;
         const flagName = params.flagName as string;
         const value = params.value;
         this.stateManager.setGlobalFlag(flagName, value);
         break;
       }
       case 'dialogue': {
+        if (!params.dialogueId) break;
         const dialogueId = params.dialogueId as string;
         this.eventBus.emit('dialogue_trigger', { dialogueId });
         break;
       }
       case 'move_agent': {
+        if (!params.agentId || !params.locationId) break;
         const agentId = params.agentId as string;
         const locationId = params.locationId as string;
         const agent = this.stateManager.getAgent(agentId);
@@ -67,6 +72,7 @@ export class EffectExecutor {
         break;
       }
       case 'create_item': {
+        if (!params.itemId || !params.locationId) break;
         const itemId = params.itemId as string;
         const locationId = params.locationId as string;
         const item = this.stateManager.getItem(itemId);
@@ -76,6 +82,7 @@ export class EffectExecutor {
         break;
       }
       case 'trigger_event': {
+        if (!params.targetEventId && !params.eventId) break;
         const targetEventId = (params.targetEventId ?? params.eventId) as string;
         this.eventBus.emit('trigger_event', { eventId: targetEventId });
         break;

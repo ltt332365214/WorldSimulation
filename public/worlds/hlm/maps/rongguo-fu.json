@@ -95,7 +95,7 @@
         "fengjie-yard": 2,
         "rongguo-gate": 3
       },
-      "items": ["book-shijicollection", "furniture-bookshelf", "furniture-teaset", "food-tea"],
+      "items": ["book-shijicollection", "furniture-bookshelf", "furniture-teaset", "food-tea", "item-taiyijing"],
       "ambience": "肃穆沉静，檀香袅袅。满架书卷经史，案上笔墨端正，空气中有墨香与纸香，令人不寒而栗。",
       "owner": "jia-zheng"
     },

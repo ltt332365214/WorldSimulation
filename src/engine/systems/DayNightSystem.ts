@@ -1,7 +1,6 @@
 import { WorldStateManager } from '../core/WorldState';
 import { SystemBase } from './SystemBase';
 import { LogEntry, ActionType } from '../types';
-import { Agent } from '../models/Agent';
 
 const AMBIENCE_MAP: Record<string, string> = {
   '深夜': '夜色深沉，万物寂然',
